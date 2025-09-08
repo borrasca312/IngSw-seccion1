@@ -1,0 +1,17 @@
+# proyecto_cursos_scouts
+
+# prueba-1
+
+Nickwinner1:esta tabla la pueden editar
+
+| ID    | Rol                     | Característica / Funcionalidad                                                   | Razón / Resultado                                                 | Criterios de aceptación                                                                                   |
+|-------|-------------------------|---------------------------------------------------------------------------------|------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
+| HU01  | Coordinador             | Necesito administrar datos recopilados de personas ingresadas vía Google Forms  | Para organizar y gestionar la información de manera eficiente    | - Las tablas deben estar unidas (relacionadas) correctamente. <br>- Se debe distinguir datos únicos y relacionados. |
+| HU02  | Coordinador             | Necesito realizar evaluaciones docentes para retroalimentación                  | Para mejorar la gestión y desempeño del equipo docente           | - La evaluación debe registrarse y estar accesible para el coordinador. <br>- Generar informes basados en estas evaluaciones. |
+| HU03  | Coordinador             | Necesito generar un informe general con toda la información consolidada         | Para entregar un reporte final confiable y controlado            | - El informe debe indicar quién lo realizó. <br>- Debe pasar por un proceso de revisión antes de ser enviado a Scout. |
+| HU04  | Superadmin              | Necesito crear perfiles de usuario y asignarles permisos personalizados         | Para gestionar roles y seguridad del sistema                      | - Los perfiles deben permitir asignar o restringir funcionalidades. <br>- El superadmin debe poder crear y editar roles. |
+| HU05  | Usuario                 | Necesito que el sistema tenga múltiples roles con diferentes permisos           | Para asegurar que cada usuario solo acceda a lo que le corresponde | - El sistema debe soportar roles como coordinador, director, administrador, etc. <br>- Cada rol tiene permisos específicos. |
+| HU06  | Usuario                 | Necesito que la interfaz del sistema sea responsive y multiplataforma           | Para poder acceder y trabajar desde ordenadores, Android e iOS   | - La UI debe adaptarse a diferentes tamaños y dispositivos. <br>- Mantener funcionalidad completa en todas las plataformas. |
+| HU07  | Coordinador / Admin     | Necesito visualizar un dashboard con reportes, datos e indicadores              | Para monitorear y analizar la información de manera rápida       | - El dashboard debe mostrar datos claros y actualizados. <br>- Los reportes deben estar disponibles en GitHub y dentro del software. |
+| HU08  | Equipo de desarrollo    | Necesito dividir el trabajo en dos secciones (Ing. Software y Proyecto Integrado) | Para fomentar competencia y colaboración en el desarrollo        | - Cada sección debe poder realizar tareas asignadas. <br>- El progreso debe ser visible y coordinado. |
+| HU09  | Coordinador             | Necesito que el sistema gestione los 144 cupos y 6 directores vinculados         | Para controlar adecuadamente el número de usuarios y responsables | - El sistema debe soportar estos límites y mantener la información organizada y actualizada.               |
