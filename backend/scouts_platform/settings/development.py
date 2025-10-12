@@ -16,27 +16,27 @@ DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 # Database configuration for development
-# OPCIÓN 1: MySQL para desarrollo (recomendado para consistencia con producción)
+# OPCIÓN 1: SQLite para desarrollo rápido y MVP
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('DB_NAME', default='sgics_dev'),
-        'USER': config('DB_USER', default='sgics_user'),
-        'PASSWORD': config('DB_PASSWORD', default='sgics_pass'),
-        'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default='3306'),
-        'OPTIONS': {
-            'charset': 'utf8mb4',           # Soporte completo UTF-8
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
-# OPCIÓN 2: SQLite para desarrollo rápido (comentar la configuración MySQL arriba)
+# OPCIÓN 2: MySQL para desarrollo (usar cuando se necesite consistencia con producción)
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': config('DB_NAME', default='sgics_dev'),
+#         'USER': config('DB_USER', default='sgics_user'),
+#         'PASSWORD': config('DB_PASSWORD', default='sgics_pass'),
+#         'HOST': config('DB_HOST', default='localhost'),
+#         'PORT': config('DB_PORT', default='3306'),
+#         'OPTIONS': {
+#             'charset': 'utf8mb4',           # Soporte completo UTF-8
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+#         },
 #     }
 # }
 
@@ -56,9 +56,9 @@ CACHES = {
 }
 
 # Development specific apps - Apps adicionales para desarrollo
-INSTALLED_APPS += [
-    'django_extensions',  # Herramientas útiles para desarrollo
-]
+# INSTALLED_APPS += [
+#     'django_extensions',  # Herramientas útiles para desarrollo  
+# ]
 
 # Logging más verboso en desarrollo
 LOGGING['loggers']['django']['level'] = 'DEBUG'

@@ -22,7 +22,6 @@ class PreinscripcionSerializer(serializers.ModelSerializer):
 class PreinscripcionCreateSerializer(serializers.ModelSerializer):
     """
     Serializer para crear preinscripciones
-    TODO: Implementar validaciones de cupos y fechas de inscripción
     """
     
     class Meta:
@@ -30,7 +29,37 @@ class PreinscripcionCreateSerializer(serializers.ModelSerializer):
         fields = ['user', 'course', 'observaciones']
     
     def validate(self, data):
-        # TODO: Validar que no exista preinscripción duplicada
-        # TODO: Validar cupos disponibles del curso
-        # TODO: Validar fechas de inscripción
+        user = data['user']
+        course = data['course']
+        
+        # Validar que no exista preinscripción duplicada
+        if Preinscripcion.objects.filter(user=user, course=course).exists():
+            raise serializers.ValidationError(
+                "Ya existe una preinscripción para este usuario y curso"
+            )
+        
+        # Validar que el curso esté activo
+        if course.status != 'ACTIVE':
+            raise serializers.ValidationError(
+                "No se puede inscribir en un curso inactivo"
+            )
+            
         return data
+
+
+class PreinscripcionUpdateEstadoSerializer(serializers.Serializer):
+    """
+    Serializer para cambiar estado de preinscripciones
+    """
+    nuevo_estado = serializers.ChoiceField(choices=Preinscripcion.ESTADOS)
+    observaciones = serializers.CharField(required=False, allow_blank=True)
+    motivo_rechazo = serializers.CharField(required=False, allow_blank=True)
+    
+    def validate_nuevo_estado(self, value):
+        """Validar que la transición de estado sea válida"""
+        instance = getattr(self, 'instance', None)
+        if instance and not instance.puede_transicionar(value):
+            raise serializers.ValidationError(
+                f"No se puede cambiar de {instance.estado} a {value}"
+            )
+        return value

@@ -1,13 +1,22 @@
 """
-Views básicas para autenticación
-TODO: El equipo debe implementar la lógica de negocio completa
+Views para autenticación JWT y gestión de usuarios
+Sistema de Gestión Integral de Cursos Scout
 """
 
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
 from .models import User, Role, RoleAssignment
-from .serializers import UserSerializer, RoleSerializer, RoleAssignmentSerializer
+from .serializers import (
+    UserSerializer, 
+    RoleSerializer, 
+    RoleAssignmentSerializer,
+    LoginSerializer,
+    CustomTokenObtainPairSerializer
+)
 
 
 class UserViewSet(viewsets.ModelViewSet):

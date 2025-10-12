@@ -17,7 +17,7 @@ class FileUploadViewSet(viewsets.ModelViewSet):
     
     queryset = FileUpload.objects.all()
     serializer_class = FileUploadSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchBackend, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['tipo', 'estado', 'preinscripcion', 'course', 'uploaded_by']
     search_fields = ['name', 'description', 'original_name']
     ordering_fields = ['uploaded_at', 'name', 'file_size']

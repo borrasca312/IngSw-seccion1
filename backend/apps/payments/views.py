@@ -19,7 +19,7 @@ class PagoViewSet(viewsets.ModelViewSet):
     
     queryset = Pago.objects.all()
     serializer_class = PagoSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchBackend, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['estado', 'medio', 'preinscripcion__course']
     search_fields = [
         'preinscripcion__user__first_name', 

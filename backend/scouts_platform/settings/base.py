@@ -88,6 +88,9 @@ TEMPLATES = [
 # WSGI application - Punto de entrada para servidor web en producción
 WSGI_APPLICATION = 'scouts_platform.wsgi.application'
 
+# Custom User Model - Modelo de usuario personalizado para SGICS
+AUTH_USER_MODEL = 'authentication.User'
+
 # Password validation - Validadores de contraseñas para seguridad
 AUTH_PASSWORD_VALIDATORS = [
     {

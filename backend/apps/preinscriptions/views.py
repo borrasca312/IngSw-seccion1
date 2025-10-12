@@ -19,7 +19,7 @@ class PreinscripcionViewSet(viewsets.ModelViewSet):
     
     queryset = Preinscripcion.objects.all()
     serializer_class = PreinscripcionSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchBackend, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['estado', 'course', 'user']
     search_fields = ['user__first_name', 'user__last_name', 'user__rut', 'course__title']
     ordering_fields = ['created_at', 'updated_at']
