@@ -2,7 +2,7 @@
 Views para el módulo de pagos
 """
 
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
@@ -19,6 +19,7 @@ class PagoViewSet(viewsets.ModelViewSet):
     
     queryset = Pago.objects.all()
     serializer_class = PagoSerializer
+    permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['estado', 'medio', 'preinscripcion__course']
     search_fields = [
@@ -95,3 +96,53 @@ class PagoViewSet(viewsets.ModelViewSet):
         pagos = self.queryset.filter(preinscripcion__user=request.user)
         serializer = self.get_serializer(pagos, many=True)
         return Response(serializer.data)
+
+    @action(detail=False, methods=['get'], url_path='by-group')
+    def by_group(self, request):
+        """
+        GET /api/payments/by-group/?group=<grupo>&course=<id>
+
+        Retorna pagos filtrados por el campo libre 'grupo' de la preinscripción,
+        con un resumen agregado por estado y monto total.
+        """
+        group = (request.query_params.get('group') or '').strip()
+        if not group:
+            return Response({'detail': "El parámetro 'group' es requerido"}, status=status.HTTP_400_BAD_REQUEST)
+
+        qs = self.queryset.select_related('preinscripcion__user', 'preinscripcion__course')
+        qs = qs.filter(preinscripcion__grupo__iexact=group)
+
+        course_id = request.query_params.get('course')
+        if course_id:
+            qs = qs.filter(preinscripcion__course_id=course_id)
+
+        count = qs.count()
+        if count == 0:
+            # Fallback stub (SCRUM-116): en esta versión no llamamos a legacy externo
+            return Response({
+                'group': group,
+                'count': 0,
+                'total_amount': '0.00',
+                'breakdown': {},
+                'items': []
+            })
+
+        # Agregados
+        from django.db.models import Sum
+        total_amount = qs.aggregate(total=Sum('monto'))['total'] or 0
+
+        # Breakdown por estado
+        breakdown = {}
+        for estado_key, _ in Pago.ESTADOS:
+            n = qs.filter(estado=estado_key).count()
+            if n:
+                breakdown[estado_key] = n
+
+        items = self.get_serializer(qs, many=True).data
+        return Response({
+            'group': group,
+            'count': count,
+            'total_amount': str(total_amount),
+            'breakdown': breakdown,
+            'items': items,
+        })
