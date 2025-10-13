@@ -1,11 +1,12 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from .views import PaymentViewSet
 
 app_name = 'payments'
 
 router = DefaultRouter()
+router.register(r'payments', PaymentViewSet, basename='payment') # Register PaymentViewSet
 
 urlpatterns = [
     path('', include(router.urls)),
-    # Will be implemented in Sprint N2 - SGICS-501, SGICS-502
 ]

@@ -37,6 +37,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',               # Django REST Framework para APIs
     'rest_framework_simplejwt',     # Autenticación JWT para APIs
     'corsheaders',                  # Manejo de CORS para frontend
+    'django_filters',               # Para filtros en DRF
 ]
 
 # Aplicaciones locales del proyecto SGICS
