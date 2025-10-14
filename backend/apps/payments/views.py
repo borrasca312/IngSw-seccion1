@@ -1,164 +1,115 @@
 """
-Views para el módulo de pagos
+Módulo de Vistas (Views) para la aplicación de Pagos.
+
+Este módulo contiene los `ViewSets` que definen la lógica de la API para cada
+modelo del módulo de pagos. Cada `ViewSet` se encarga de gestionar las
+operaciones CRUD (Crear, Leer, Actualizar, Eliminar) para su modelo asociado.
 """
-
-from rest_framework import viewsets, status, permissions
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
-from .models import Pago, Cuota
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from .models import PagoPersona, PagoCambioPersona, Prepago, ComprobantePago, PagoComprobante, ConceptoContable
 from .serializers import (
-    PagoSerializer,
-    PagoDetailSerializer,
-    PagoCreateSerializer,
-    CuotaSerializer,
-    CuotaCreateSerializer,
+    PagoPersonaSerializer, PagoCambioPersonaSerializer, PrepagoSerializer, 
+    ComprobantePagoSerializer, PagoComprobanteSerializer, ConceptoContableSerializer
 )
+from .filters import PagoPersonaFilter, ComprobantePagoFilter
+# Importamos la clase de permiso personalizada. Asumiendo que está en un módulo de permisos.
+# Para este ejemplo, la importamos desde la configuración de DRF.
+from scouts_platform.settings.rest_framework import IsTreasurerOrAdminOrReadOnly
 
+class PagoPersonaViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para gestionar los pagos de personas (`PagoPersona`).
 
-class PagoViewSet(viewsets.ModelViewSet):
-    """ViewSet para pagos"""
-
-    queryset = Pago.objects.all()
-    serializer_class = PagoSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    filter_backends = [
-        DjangoFilterBackend,
-        filters.SearchFilter,
-        filters.OrderingFilter,
-    ]
-    filterset_fields = ["estado", "medio", "preinscripcion__course"]
-    search_fields = [
-        "preinscripcion__user__first_name",
-        "preinscripcion__user__last_name",
-        "preinscripcion__user__rut",
-        "referencia",
-    ]
-    ordering_fields = ["created_at", "fecha_pago", "monto"]
-    ordering = ["-created_at"]
-
-    def get_serializer_class(self):
-        if self.action == "create":
-            return PagoCreateSerializer
-        elif self.action == "retrieve":
-            return PagoDetailSerializer
-        return PagoSerializer
+    Proporciona los endpoints estándar para:
+    - `GET /pagos-persona/`: Listar todos los pagos.
+    - `POST /pagos-persona/`: Crear un nuevo pago.
+    - `GET /pagos-persona/{id}/`: Ver el detalle de un pago.
+    - `PUT /pagos-persona/{id}/`: Actualizar un pago existente.
+    - `DELETE /pagos-persona/{id}/`: Eliminar un pago.
+    """
+    # queryset: Define la consulta base para obtener los datos.
+    # Usamos `select_related('USU_ID')` para optimizar la consulta, trayendo
+    # los datos del usuario relacionado en una sola petición a la base de datos.
+    queryset = PagoPersona.objects.select_related('USU_ID').all()
+    
+    # serializer_class: Especifica el serializador que se usará para convertir
+    # los objetos `PagoPersona` a JSON y viceversa.
+    serializer_class = PagoPersonaSerializer
+    
+    # permission_classes: Define quién tiene permiso para acceder a esta vista.
+    # `IsTreasurerOrAdminOrReadOnly` permite leer a cualquier usuario autenticado,
+    # pero solo permite escribir (crear, actualizar, borrar) a administradores/tesoreros.
+    permission_classes = [IsTreasurerOrAdminOrReadOnly]
+    
+    # Conectamos la clase de filtro que creamos.
+    filterset_class = PagoPersonaFilter
 
     def perform_create(self, serializer):
-        serializer.save(registrado_por=self.request.user)
+        """Asigna automáticamente el usuario autenticado como creador del pago."""
+        serializer.save(USU_ID=self.request.user)
 
-    @action(detail=True, methods=["patch"])
-    def cambiar_estado(self, request, pk=None):
-        """Cambia el estado de un pago"""
-        pago = self.get_object()
-        nuevo_estado = request.data.get("estado")
+class PagoCambioPersonaViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para el historial de cambios de titularidad de un pago (`PagoCambioPersona`).
+    
+    Permite auditar las transferencias de pagos entre personas.
+    """
+    # Optimizamos la consulta para incluir los datos del usuario y del pago original.
+    queryset = PagoCambioPersona.objects.select_related('USU_ID', 'PAP_ID').all()
+    serializer_class = PagoCambioPersonaSerializer
+    permission_classes = [IsTreasurerOrAdminOrReadOnly]
 
-        if nuevo_estado not in dict(Pago.ESTADOS):
-            return Response(
-                {"error": "Estado inválido"}, status=status.HTTP_400_BAD_REQUEST
-            )
+    def perform_create(self, serializer):
+        """Asigna automáticamente el usuario autenticado que registra el cambio."""
+        serializer.save(USU_ID=self.request.user)
 
-        pago.estado = nuevo_estado
-        pago.save()
+class PrepagoViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para gestionar los saldos a favor o prepagos (`Prepago`).
+    
+    Endpoint para administrar los créditos que una persona tiene a su favor.
+    """
+    # Optimizamos la consulta para incluir el pago que originó el prepago, si existe.
+    queryset = Prepago.objects.select_related('PAP_ID').all()
+    serializer_class = PrepagoSerializer
+    permission_classes = [IsTreasurerOrAdminOrReadOnly]
 
-        serializer = self.get_serializer(pago)
-        return Response(serializer.data)
+class ConceptoContableViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para el catálogo de conceptos contables (`ConceptoContable`).
+    
+    Permite administrar los diferentes tipos de transacciones (ej. 'Inscripción', 'Donación').
+    """
+    queryset = ConceptoContable.objects.all()
+    serializer_class = ConceptoContableSerializer
+    permission_classes = [IsTreasurerOrAdminOrReadOnly]
 
-    @action(detail=True, methods=["post"])
-    def crear_cuotas(self, request, pk=None):
-        """Crea cuotas para un pago"""
-        pago = self.get_object()
-        cuotas_data = request.data.get("cuotas", [])
+class ComprobantePagoViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para los documentos de comprobantes de pago (`ComprobantePago`).
+    
+    Gestiona la creación y consulta de los recibos o facturas que respaldan los pagos.
+    """
+    # Optimizamos la consulta para incluir el usuario y el concepto contable.
+    queryset = ComprobantePago.objects.select_related('USU_ID', 'COC_ID').all()
+    serializer_class = ComprobantePagoSerializer
+    permission_classes = [IsTreasurerOrAdminOrReadOnly]
+    
+    # Conectamos el nuevo conjunto de filtros para los comprobantes.
+    filterset_class = ComprobantePagoFilter
 
-        # Validar que no existan cuotas ya
-        if pago.cuotas.exists():
-            return Response(
-                {"error": "El pago ya tiene cuotas asignadas"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+    def perform_create(self, serializer):
+        """Asigna automáticamente el usuario autenticado como emisor del comprobante."""
+        serializer.save(USU_ID=self.request.user)
 
-        created_cuotas = []
-        for cuota_data in cuotas_data:
-            cuota_data["pago"] = pago.id
-            serializer = CuotaCreateSerializer(data=cuota_data)
-            if serializer.is_valid():
-                cuota = serializer.save(pago=pago)
-                created_cuotas.append(cuota)
-            else:
-                # Si hay error, eliminar cuotas ya creadas
-                for c in created_cuotas:
-                    c.delete()
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response(
-            CuotaSerializer(created_cuotas, many=True).data,
-            status=status.HTTP_201_CREATED,
-        )
-
-    @action(detail=False, methods=["get"])
-    def mis_pagos(self, request):
-        """Obtiene los pagos del usuario actual"""
-        pagos = self.queryset.filter(preinscripcion__user=request.user)
-        serializer = self.get_serializer(pagos, many=True)
-        return Response(serializer.data)
-
-    @action(detail=False, methods=["get"], url_path="by-group")
-    def by_group(self, request):
-        """
-        GET /api/payments/by-group/?group=<grupo>&course=<id>
-
-        Retorna pagos filtrados por el campo libre 'grupo' de la preinscripción,
-        con un resumen agregado por estado y monto total.
-        """
-        group = (request.query_params.get("group") or "").strip()
-        if not group:
-            return Response(
-                {"detail": "El parámetro 'group' es requerido"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        qs = self.queryset.select_related(
-            "preinscripcion__user", "preinscripcion__course"
-        )
-        qs = qs.filter(preinscripcion__grupo__iexact=group)
-
-        course_id = request.query_params.get("course")
-        if course_id:
-            qs = qs.filter(preinscripcion__course_id=course_id)
-
-        count = qs.count()
-        if count == 0:
-            # Fallback stub (SCRUM-116): en esta versión no llamamos a legacy externo
-            return Response(
-                {
-                    "group": group,
-                    "count": 0,
-                    "total_amount": "0.00",
-                    "breakdown": {},
-                    "items": [],
-                }
-            )
-
-        # Agregados
-        from django.db.models import Sum
-
-        total_amount = qs.aggregate(total=Sum("monto"))["total"] or 0
-
-        # Breakdown por estado
-        breakdown = {}
-        for estado_key, _ in Pago.ESTADOS:
-            n = qs.filter(estado=estado_key).count()
-            if n:
-                breakdown[estado_key] = n
-
-        items = self.get_serializer(qs, many=True).data
-        return Response(
-            {
-                "group": group,
-                "count": count,
-                "total_amount": str(total_amount),
-                "breakdown": breakdown,
-                "items": items,
-            }
-        )
+class PagoComprobanteViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para la relación entre Pagos y Comprobantes (`PagoComprobante`).
+    
+    Administra la tabla intermedia que vincula qué pagos pertenecen a qué comprobantes.
+    """
+    # Optimizamos para traer los datos del pago y del comprobante en una sola consulta.
+    queryset = PagoComprobante.objects.select_related('PAP_ID', 'CPA_ID').all()
+    serializer_class = PagoComprobanteSerializer
+    permission_classes = [IsTreasurerOrAdminOrReadOnly]
