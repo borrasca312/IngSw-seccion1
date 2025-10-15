@@ -5,16 +5,16 @@
 
     <div class="mt-6 space-y-2">
       <div>
-        <label class="block text-sm font-medium text-gray-700">Nombre</label>
-        <input v-model="firstName" class="w-full rounded border px-3 py-2" />
+        <label for="firstName" class="block text-sm font-medium text-gray-700">Nombre</label>
+        <input id="firstName" v-model="firstName" class="w-full rounded border px-3 py-2" />
       </div>
       <div>
-        <label class="block text-sm font-medium text-gray-700">Apellido</label>
-        <input v-model="lastName" class="w-full rounded border px-3 py-2" />
+        <label for="lastName" class="block text-sm font-medium text-gray-700">Apellido</label>
+        <input id="lastName" v-model="lastName" class="w-full rounded border px-3 py-2" />
       </div>
       <div>
-        <label class="block text-sm font-medium text-gray-700">Email</label>
-        <input v-model="email" class="w-full rounded border px-3 py-2" />
+        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+        <input id="email" v-model="email" class="w-full rounded border px-3 py-2" />
       </div>
     </div>
   </div>
@@ -38,4 +38,5 @@ function onAutofill(p: PersonSummary) {
 </script>
 
 <style scoped>
+/* Empty styles */
 </style>

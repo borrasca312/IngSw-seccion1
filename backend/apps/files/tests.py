@@ -9,6 +9,7 @@ from rest_framework.test import APIClient
 from django.contrib.auth import get_user_model
 from .models import FileUpload
 
+
 @pytest.mark.django_db
 class TestFileUploadAPI:
     def setup_method(self):
@@ -23,13 +24,17 @@ class TestFileUploadAPI:
         file_content = b"contenido de prueba"
         file = io.BytesIO(file_content)
         file.name = "test.txt"
-        response = self.client.post(url, {
-            "name": "Archivo de prueba",
-            "description": "Test básico de subida",
-            "file": file,
-            "tipo": "DOCUMENTO",
-            "is_public": True
-        }, format="multipart")
+        response = self.client.post(
+            url,
+            {
+                "name": "Archivo de prueba",
+                "description": "Test básico de subida",
+                "file": file,
+                "tipo": "DOCUMENTO",
+                "is_public": True,
+            },
+            format="multipart",
+        )
         assert response.status_code == 201
         data = response.json()
         assert data["name"] == "Archivo de prueba"
@@ -40,12 +45,16 @@ class TestFileUploadAPI:
         file_content = b"x" * (10 * 1024 * 1024 + 1)  # 10MB + 1 byte
         file = io.BytesIO(file_content)
         file.name = "bigfile.txt"
-        response = self.client.post(url, {
-            "name": "Archivo grande",
-            "description": "Test tamaño",
-            "file": file,
-            "tipo": "DOCUMENTO",
-            "is_public": True
-        }, format="multipart")
+        response = self.client.post(
+            url,
+            {
+                "name": "Archivo grande",
+                "description": "Test tamaño",
+                "file": file,
+                "tipo": "DOCUMENTO",
+                "is_public": True,
+            },
+            format="multipart",
+        )
         assert response.status_code == 400
         assert "demasiado grande" in response.json()["file"][0]

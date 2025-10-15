@@ -95,19 +95,11 @@ class CoursesService extends BaseApiService {
   }
 
   async getCategories(): Promise<Category[]> {
-    const response = await this.customAction('', '../categories')
-    return response
+    return await this.customAction('', '../categories')
   }
 
   async getTeams(courseId?: number): Promise<CourseTeam[]> {
-    const params = courseId ? { course: courseId } : undefined
-    const response = await this.customAction('', '../teams', params)
-    return response
-  }
-
-  async addTeamMember(data: { course: number; user: number; role: string }): Promise<CourseTeam> {
-    const response = await this.customAction('', '../teams', data)
-    return response
+    return await this.customAction('', '../teams', courseId ? { courseId } : undefined)
   }
 }
 

@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.utils.html import format_html
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from .models import User
@@ -51,16 +50,15 @@ class UserAdmin(BaseUserAdmin):
         try:
             preinscription_url = reverse('admin:preinscriptions_preinscription_changelist') + f'?persona__user={obj.id}'
             actions.append(f'<a href="{preinscription_url}" title="Ver preinscripciones">📋</a>')
-        except:
+        except Exception:
             pass
         
         # Ver pagos
         try:
             payment_url = reverse('admin:payments_payment_changelist') + f'?persona__user={obj.id}'
             actions.append(f'<a href="{payment_url}" title="Ver pagos">💳</a>')
-        except:
+        except Exception:
             pass
-        
         return mark_safe(' | '.join(actions)) if actions else '-'
     
     user_actions.short_description = 'Acciones'

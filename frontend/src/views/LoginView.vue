@@ -71,18 +71,14 @@ const isFormValid = computed(() => {
 
 const submit = async () => {
   if (!isFormValid.value) return
-  
-  try {
-    await authStore.login({
-      username: form.value.username,
-      password: form.value.password
-    })
-    
-    // Redirigir al dashboard después del login exitoso
-    const redirect = (router.currentRoute.value.query.redirect as string) || '/dashboard'
-    router.push(redirect)
-  } catch (_err: any) {
-    // El store ya setea authStore.error y el template lo muestra.
-  }
+
+  await authStore.login({
+    username: form.value.username,
+    password: form.value.password
+  })
+
+  // Redirigir al dashboard después del login exitoso
+  const redirect = (router.currentRoute.value.query.redirect as string) || '/dashboard'
+  router.push(redirect)
 }
 </script>

@@ -13,59 +13,62 @@ DEBUG = False
 
 # Use in-memory database for faster tests
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ':memory:',
-        'OPTIONS': {
-            'timeout': 20,
-        }
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": ":memory:",
+        "OPTIONS": {
+            "timeout": 20,
+        },
     }
 }
+
 
 # Disable migrations during testing for speed
 class DisableMigrations:
     def __contains__(self, item):
         return True
-    
+
     def __getitem__(self, item):
         return None
+
 
 MIGRATION_MODULES = DisableMigrations()
 
 # Password hashers - Use fast hasher for testing
 PASSWORD_HASHERS = [
-    'django.contrib.auth.hashers.MD5PasswordHasher',  # Fastest for testing
+    "django.contrib.auth.hashers.MD5PasswordHasher",  # Fastest for testing
 ]
 
 # Email backend for testing
-EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 
 # Cache - Use local memory for testing
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
     }
 }
 
 # Media files - Use temporary directory for testing
 import tempfile
+
 MEDIA_ROOT = tempfile.gettempdir()
 
 # Logging - Minimal logging during tests
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.NullHandler',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.NullHandler",
         },
     },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
         },
-        'scouts_platform': {
-            'handlers': ['console'],
+        "scouts_platform": {
+            "handlers": ["console"],
         },
     },
 }
@@ -78,4 +81,4 @@ CELERY_TASK_EAGER_PROPAGATES = True
 CORS_ALLOW_ALL_ORIGINS = True
 
 # Secret key for testing
-SECRET_KEY = 'test-secret-key-not-for-production'
+SECRET_KEY = "test-secret-key-not-for-production"
