@@ -1,11 +1,11 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
-from .models import Preinscription
+from .models import Preinscripcion
 
 
-@admin.register(Preinscription)
-class PreinscriptionAdmin(admin.ModelAdmin):
+@admin.register(Preinscripcion)
+class PreinscripcionAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "course",

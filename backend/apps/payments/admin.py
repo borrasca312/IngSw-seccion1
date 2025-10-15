@@ -2,11 +2,11 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.db.models import Sum
-from .models import Payment
+from .models import PagoPersona
 
 
-@admin.register(Payment)
-class PaymentAdmin(admin.ModelAdmin):
+@admin.register(PagoPersona)
+class PagoPersonaAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "persona_info",
