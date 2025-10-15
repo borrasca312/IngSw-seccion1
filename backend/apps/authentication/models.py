@@ -96,6 +96,14 @@ class User(AbstractUser):
     def __str__(self):
         return self.get_full_name() or self.username
 
+    def has_role(self, role_code: str) -> bool:
+        """
+        Verifica si el usuario tiene un rol específico asignado y activo.
+        """
+        return self.role_assignments.filter(
+            role__code=role_code, is_active=True
+        ).exists()
+
 
 class Role(models.Model):
     """

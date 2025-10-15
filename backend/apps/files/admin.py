@@ -1,9 +1,11 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
-from .models import FileUpload, FileDownload
+from .models import FileUpload
 
 
+@admin.register(FileUpload)
+class FileUploadAdmin(admin.ModelAdmin):
 @admin.register(FileUpload)
 class FileUploadAdmin(admin.ModelAdmin):
     list_display = (

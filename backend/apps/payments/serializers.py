@@ -129,10 +129,16 @@ class ComprobantePagoSerializer(serializers.ModelSerializer):
         pagos_ids = validated_data.pop("pagos_ids")
         if not pagos_ids:
             raise ValidationError({"pagos_ids": "Esta lista no puede estar vacía."})
+        
+        # Validar duplicados antes de consultar la base de datos.
+        if len(pagos_ids) != len(set(pagos_ids)):
+            raise ValidationError(
+                {"pagos_ids": "Uno o más IDs de pago no son válidos o están duplicados."}
+            )
 
         # 2. Buscamos los objetos PagoPersona correspondientes a los IDs.
         pagos = PagoPersona.objects.filter(pk__in=pagos_ids)
-        if len(pagos) != len(set(pagos_ids)):
+        if len(pagos) != len(pagos_ids):
             raise ValidationError(
                 {
                     "pagos_ids": "Uno o más IDs de pago no son válidos o están duplicados."
