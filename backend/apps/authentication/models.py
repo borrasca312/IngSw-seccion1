@@ -19,51 +19,49 @@ TODO: El equipo A debe completar:
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.db.models import JSONField  # Requiere Django 3.1+ o PostgreSQL
+
+# Opciones para ramas Scout
+RAMAS_SCOUT = [
+    ('lobatos', 'Lobatos'),
+    ('scouts', 'Scouts'),
+    ('caminantes', 'Caminantes'),
+    ('rovers', 'Rovers'),
+]
 
 class User(AbstractUser):
     """
     Usuario extendido para el sistema Scout con campos específicos de la organización.
-    
-    Extiende AbstractUser de Django agregando campos requeridos para:
-    - Identificación chilena (RUT)
-    - Información de contacto Scout
-    - Datos demográficos básicos
-    - Relaciones con la organización Scout
     """
-    
-    # Campos de identificación chilena
+
     rut = models.CharField(
-        max_length=12, 
-        unique=True, 
+        max_length=12,
+        unique=True,
         null=True,
         blank=True,
         verbose_name="RUT",
         help_text="RUT sin puntos y con guión (ej: 12345678-9)"
     )
-    
-    # Información de contacto
+
     telefono = models.CharField(
-        max_length=15, 
+        max_length=15,
         blank=True,
         verbose_name="Teléfono de contacto"
     )
-    
-    # Datos demográficos  
+
     fecha_nacimiento = models.DateField(
-        null=True, 
+        null=True,
         blank=True,
         verbose_name="Fecha de nacimiento"
     )
-    
-    # Información Scout básica
-    # TODO: El equipo debe expandir con choices específicos
+
     rama = models.CharField(
-        max_length=20, 
+        max_length=20,
+        choices=RAMAS_SCOUT,
         blank=True,
         verbose_name="Rama Scout actual"
     )
-    
-    # Relaciones de Django con related_name para evitar conflictos
+
     groups = models.ManyToManyField(
         'auth.Group',
         verbose_name='groups',
@@ -72,7 +70,7 @@ class User(AbstractUser):
         related_name='custom_user_set',
         related_query_name='custom_user'
     )
-    
+
     user_permissions = models.ManyToManyField(
         'auth.Permission',
         verbose_name='user permissions',
@@ -81,69 +79,76 @@ class User(AbstractUser):
         related_name='custom_user_set',
         related_query_name='custom_user'
     )
-    
-    # Timestamps
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     def clean(self):
-        """TODO: Implementar validación completa de RUT usando utils.rut_validator"""
+        """Validación del RUT usando utilitario externo"""
         if self.rut:
-            # TODO: from utils.rut_validator import validar_rut
-            # if not validar_rut(self.rut):
-            #     raise ValidationError({'rut': 'RUT inválido'})
-            pass
-    
+            try:
+                from utils.rut_validator import validar_rut
+                if not validar_rut(self.rut):
+                    raise ValidationError({'rut': 'RUT inválido'})
+            except ImportError:
+                raise ValidationError({'rut': 'No se pudo importar el validador de RUT'})
+
     class Meta:
         db_table = 'auth_user_extended'
         verbose_name = 'Usuario'
         verbose_name_plural = 'Usuarios'
         ordering = ['first_name', 'last_name']
-    
+
     def __str__(self):
         return self.get_full_name() or self.username
 
 
 class Role(models.Model):
     """
-    Roles del sistema - TODO: Definir roles Scout específicos
+    Roles del sistema Scout
     """
     code = models.CharField(max_length=40, unique=True)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    
-    # TODO: Agregar sistema de permisos JSON
+    permissions = JSONField(blank=True, null=True, help_text="Permisos específicos del rol")
     is_active = models.BooleanField(default=True)
-    
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     class Meta:
         db_table = 'auth_roles'
         verbose_name = 'Rol'
         verbose_name_plural = 'Roles'
-    
+
     def __str__(self):
         return self.name
 
 
 class RoleAssignment(models.Model):
     """
-    Asignación de roles - TODO: Implementar sistema completo RBAC
+    Asignación de roles con soporte para auditoría y alcance
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='role_assignments')
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
-    
-    # TODO: Agregar campos de scoping (scope_type, scope_id)
-    # TODO: Agregar campos de auditoría (assigned_by, expires_at)
-    
+
+    scope_type = models.CharField(max_length=50, blank=True, null=True)
+    scope_id = models.PositiveIntegerField(blank=True, null=True)
+    assigned_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='assigned_roles')
+    expires_at = models.DateTimeField(blank=True, null=True)
+
     assigned_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
-    
+
     class Meta:
         db_table = 'auth_role_assignments'
         unique_together = ('user', 'role')
-    
+
     def __str__(self):
         return f"{self.user.username} → {self.role.code}"
-    
-    # TODO: Implementar métodos user_has_role() y get_user_roles()
+
+    @staticmethod
+    def user_has_role(user, role_code):
+        return RoleAssignment.objects.filter(user=user, role__code=role_code, is_active=True).exists()
+
+    @staticmethod
+    def get_user_roles(user):
+        return Role.objects.filter(roleassignment__user=user, roleassignment__is_active=True)
