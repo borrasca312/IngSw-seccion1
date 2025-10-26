@@ -1,17 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import * as paymentsService from '@/services/payments'
-import type { Payment } from '@/types'
-
-interface Meta {
-  count: number
-  totalAmount: number
-  breakdown: Record<string, any>
-}
+import * as paymentsService from '@/services/payments' 
 
 export const usePaymentsStore = defineStore('payments', () => {
-  const list = ref<Payment[]>([])
-  const meta = ref<Meta>({ count: 0, totalAmount: 0, breakdown: {} })
+  const list = ref<any[]>([])
+  const meta = ref({ count: 0, total_amount: 0, breakdown: {} })
   const loading = ref(false)
   const error = ref<string | null>(null)
 
@@ -23,7 +16,7 @@ export const usePaymentsStore = defineStore('payments', () => {
       list.value = data.items
       meta.value = {
         count: data.count,
-        totalAmount: parseFloat(data.total_amount) || 0,
+        total_amount: parseFloat(data.total_amount), 
         breakdown: data.breakdown
       }
       return data
@@ -96,13 +89,13 @@ export const usePaymentsStore = defineStore('payments', () => {
   }
 
   return {
-    // state
+   
     list,
     meta,
     loading,
     error,
 
-    // actions
+    
     fetchByGroup,
     get,
     create,

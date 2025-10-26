@@ -25,20 +25,21 @@ export async function getPaymentsByGroup(
   group: string,
   courseId?: number,
   signal?: AbortSignal
-): Promise<PaymentsByGroupResponse> {
+): Promise<PaymentsByGroupResponse & { totalAmount: number }> {
   const params: Record<string, any> = { group }
-  if (courseId) {
+  if (courseId != null) {
     params.course = courseId
   }
   const { data } = await axios.get<PaymentsByGroupResponse>(
     '/api/payments/by-group/',
     { params, signal }
   )
-  return data
+  const totalAmount = Number(data.total_amount as unknown as string)
+  return { ...data, totalAmount }
 }
 
 export async function getPayment(id: number) {
-  const { data } = await axios.get(`/api/payments/${id}/`)
+  const { data } = await axios.get(`/api/payments/pagos-persona/${id}/`)
   return data
 }
 
