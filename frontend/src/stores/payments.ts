@@ -23,7 +23,7 @@ export const usePaymentsStore = defineStore('payments', () => {
       list.value = data.items
       meta.value = {
         count: data.count,
-        totalAmount: data.total_amount,
+        totalAmount: parseFloat(data.total_amount) || 0,
         breakdown: data.breakdown
       }
       return data
