@@ -36,3 +36,45 @@ export async function getPaymentsByGroup(
   )
   return data
 }
+
+export async function getPayment(id: number) {
+  const { data } = await axios.get(`/api/payments/${id}/`)
+  return data
+}
+
+export async function createPayment(payload: Record<string, any>) {
+  const { data } = await axios.post('/api/payments/pagos-persona/', payload)
+  return data
+}
+
+export async function updatePayment(id: number, payload: Record<string, any>) {
+  const { data } = await axios.put(`/api/payments/pagos-persona/${id}/`, payload)
+  return data
+}
+
+export async function deletePayment(id: number) {
+  const { data } = await axios.delete(`/api/payments/pagos-persona/${id}/`)
+  return data
+}
+
+// Comprobante related
+export async function createComprobante(payload: Record<string, any>) {
+  const { data } = await axios.post('/api/payments/comprobantes-pago/', payload)
+  return data
+}
+
+// Cambio titularidad
+export async function changeTitularidad(payload: Record<string, any>) {
+  const { data } = await axios.post('/api/payments/pagos-cambio-persona/', payload)
+  return data
+}
+
+export default {
+  getPaymentsByGroup,
+  getPayment,
+  createPayment,
+  updatePayment,
+  deletePayment,
+  createComprobante,
+  changeTitularidad
+}
