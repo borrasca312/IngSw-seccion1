@@ -119,8 +119,9 @@ class CatalogService extends BaseApiService {
   }
 
   // Zonas Scout
-  async getZonas(): Promise<Zona[]> {
-    const response = await this.customAction('', 'zonas')
+  async getZonas(regionId?: string): Promise<Zona[]> {
+    const params = regionId ? { region_principal : regionId } : undefined
+    const response = await this.customAction('', 'zonas', params)
     return response
   }
 

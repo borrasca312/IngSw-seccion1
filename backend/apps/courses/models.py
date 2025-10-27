@@ -161,14 +161,15 @@ class Course(models.Model):
     @property
     def available_slots(self):
         """TODO: Calcular cupos disponibles basado en preinscripciones confirmadas"""
-        # return self.max_participants - self.preinscripciones.filter(estado='CONFIRMADA').count()
-        return self.max_participants  # Implementación temporal
+        return self.max_participants - self.preinscripciones.filter(estado='CONFIRMADA').count()
+        # return self.max_participants  # Implementación temporal
 
     @property
     def is_enrollment_open(self):
         """TODO: Verificar si las inscripciones están abiertas"""
         # Verificar fechas de inscripción, estado del curso, cupos disponibles
-        return self.status == self.ACTIVE
+        # return self.status == self.ACTIVE
+        return self.status == self.ACTIVE and self.available_slots > 0
 
     class Meta:
         db_table = "courses"

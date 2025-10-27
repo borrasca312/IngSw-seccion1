@@ -17,11 +17,75 @@ from .models import (
     TipoAlimentacion,
 )
 
+class GrupoScoutSerializer(serializers.ModelSerializer):
+    distrito_nombre = serializers.CharField(source="distrito.nombre", read_only=True)
+    zona_nombre = serializers.CharField(source="distrito.zona.nombre", read_only=True)
+    comuna_nombre = serializers.CharField(source="comuna.nombre", read_only=True)
+
+    class Meta:
+        model = GrupoScout
+        fields = [
+            "codigo",
+            "nombre",
+            "distrito",
+            "distrito_nombre",
+            "zona_nombre",
+            "comuna",
+            "comuna_nombre",
+            "direccion",
+            "telefono",
+            "email",
+            "fecha_fundacion",
+            "is_active",
+            "created_at",
+        ]
+        read_only_fields = ["created_at"]
+
+class DistritoSerializer(serializers.ModelSerializer):
+    zona_nombre = serializers.CharField(source="zona.nombre", read_only=True)
+
+    grupos = GrupoScoutSerializer(many=True, read_only=True)
+    class Meta:
+        model = Distrito
+        fields = [
+            "codigo",
+            "nombre",
+            "zona",
+            "zona_nombre",
+            "descripcion",
+            "is_active",
+            "created_at",
+            "grupos",
+        ]
+        read_only_fields = ["created_at"]
+
+class ZonaSerializer(serializers.ModelSerializer):
+    region_principal_nombre = serializers.CharField(
+        source="region_principal.nombre", read_only=True
+    )
+
+    distritos = DistritoSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Zona
+        fields = [
+            "codigo",
+            "nombre",
+            "descripcion",
+            "region_principal",
+            "region_principal_nombre",
+            "is_active",
+            "created_at",
+            "distritos",
+        ]
+        read_only_fields = ["created_at"]
 
 class RegionSerializer(serializers.ModelSerializer):
+    
+    zonas = ZonaSerializer(many=True, read_only=True, source="zona_set")
     class Meta:
         model = Region
-        fields = ["codigo", "nombre", "nombre_corto", "is_active", "created_at"]
+        fields = ["codigo", "nombre", "nombre_corto", "is_active", "created_at", "zonas"]
         read_only_fields = ["created_at"]
 
 
@@ -59,68 +123,6 @@ class ComunaSerializer(serializers.ModelSerializer):
             "created_at",
         ]
         read_only_fields = ["created_at"]
-
-
-class ZonaSerializer(serializers.ModelSerializer):
-    region_principal_nombre = serializers.CharField(
-        source="region_principal.nombre", read_only=True
-    )
-
-    class Meta:
-        model = Zona
-        fields = [
-            "codigo",
-            "nombre",
-            "descripcion",
-            "region_principal",
-            "region_principal_nombre",
-            "is_active",
-            "created_at",
-        ]
-        read_only_fields = ["created_at"]
-
-
-class DistritoSerializer(serializers.ModelSerializer):
-    zona_nombre = serializers.CharField(source="zona.nombre", read_only=True)
-
-    class Meta:
-        model = Distrito
-        fields = [
-            "codigo",
-            "nombre",
-            "zona",
-            "zona_nombre",
-            "descripcion",
-            "is_active",
-            "created_at",
-        ]
-        read_only_fields = ["created_at"]
-
-
-class GrupoScoutSerializer(serializers.ModelSerializer):
-    distrito_nombre = serializers.CharField(source="distrito.nombre", read_only=True)
-    zona_nombre = serializers.CharField(source="distrito.zona.nombre", read_only=True)
-    comuna_nombre = serializers.CharField(source="comuna.nombre", read_only=True)
-
-    class Meta:
-        model = GrupoScout
-        fields = [
-            "codigo",
-            "nombre",
-            "distrito",
-            "distrito_nombre",
-            "zona_nombre",
-            "comuna",
-            "comuna_nombre",
-            "direccion",
-            "telefono",
-            "email",
-            "fecha_fundacion",
-            "is_active",
-            "created_at",
-        ]
-        read_only_fields = ["created_at"]
-
 
 class RamaSerializer(serializers.ModelSerializer):
     class Meta:
