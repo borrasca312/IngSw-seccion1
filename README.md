@@ -111,3 +111,17 @@ Frontend (Vue) con Sentry:
 - Subida de sourcemaps (opcional) con el plugin de Vite, si defines estas variables en el entorno de build:
   - `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT`
   - El plugin se activa automáticamente solo si están presentes.
+
+## 6) Personas: búsqueda avanzada (API)
+
+Endpoint: `GET /api/persons/search/`
+
+Parámetros de consulta:
+- `rut`: string (formateado o parcial)
+- `nombre`: string (`icontains`)
+- `grupo`: código exacto o parte del nombre del grupo
+- `rama`: código exacto (p. ej., `MANADA`, `TROPA`) o parte del nombre
+- `edad_min`, `edad_max`: enteros (años)
+- `page`, `page_size` (máx. 100)
+
+Respuesta paginada estándar de DRF con `count`, `next`, `previous` y `results`.
