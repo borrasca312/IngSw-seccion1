@@ -1,36 +1,81 @@
 import axios from 'axios'
 
-// Frontend types matching backend canonical PagoPersona DTO
-export interface PagoPersonaItem {
-  PAP_ID: number
-  PER_ID: number
-  CUR_ID: number | null
-  USU_ID: number
-  PAP_VALOR: string | number
-  PAP_TIPO?: string
-  PAP_FECHA_HORA?: string | null
-  PAP_OBSERVACION?: string
+export interface PaymentItem {
+  id: number
+  preinscripcion: number
+  monto: string | number
+  medio: string
+  referencia: string
+  notas: string
+  estado: string
+  fecha_pago: string | null
+  created_at: string
+  updated_at: string
 }
 
 export interface PaymentsByGroupResponse {
   group: string
   count: number
-  // total_amount may be provided by backend or computed by frontend
-  total_amount?: string
-  // Optional breakdown: e.g. { PENDING: 3, COMPLETED: 10 }
-  breakdown?: Record<string, number>
-  items: PagoPersonaItem[]
+  total_amount: string
+  breakdown: Record<string, number>
+  items: PaymentItem[]
 }
 
 export async function getPaymentsByGroup(
   group: string,
   courseId?: number,
   signal?: AbortSignal
-): Promise<PaymentsByGroupResponse> {
+): Promise<PaymentsByGroupResponse & { totalAmount: number }> {
   const params: Record<string, any> = { group }
-  if (courseId) params.course = courseId
+  if (courseId != null) {
+    params.course = courseId
+  }
+  const { data } = await axios.get<PaymentsByGroupResponse>(
+    '/api/payments/by-group/',
+    { params, signal }
+  )
+  const totalAmount = Number(data.total_amount as unknown as string)
+  return { ...data, totalAmount }
+}
 
-  // Backend provides this under pagos-persona/by-group via the payments router
-  const { data } = await axios.get<PaymentsByGroupResponse>('/api/payments/pagos-persona/by-group/', { params, signal })
+export async function getPayment(id: number) {
+  const { data } = await axios.get(`/api/payments/pagos-persona/${id}/`)
   return data
+}
+
+export async function createPayment(payload: Record<string, any>) {
+  const { data } = await axios.post('/api/payments/pagos-persona/', payload)
+  return data
+}
+
+export async function updatePayment(id: number, payload: Record<string, any>) {
+  const { data } = await axios.put(`/api/payments/pagos-persona/${id}/`, payload)
+  return data
+}
+
+export async function deletePayment(id: number) {
+  const { data } = await axios.delete(`/api/payments/pagos-persona/${id}/`)
+  return data
+}
+
+// Comprobante related
+export async function createComprobante(payload: Record<string, any>) {
+  const { data } = await axios.post('/api/payments/comprobantes-pago/', payload)
+  return data
+}
+
+// Cambio titularidad
+export async function changeTitularidad(payload: Record<string, any>) {
+  const { data } = await axios.post('/api/payments/pagos-cambio-persona/', payload)
+  return data
+}
+
+export default {
+  getPaymentsByGroup,
+  getPayment,
+  createPayment,
+  updatePayment,
+  deletePayment,
+  createComprobante,
+  changeTitularidad
 }

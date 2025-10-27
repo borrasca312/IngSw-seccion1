@@ -25,7 +25,6 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.16",
     "@heroicons/vue": "^2.0.18",
-    "@tailwindcss/vite": "^4.1.14",
     "axios": "^1.6.0",
     "pinia": "^2.1.7",
     "vee-validate": "^4.11.8",
