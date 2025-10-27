@@ -25,7 +25,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from apps.authentication.views import PersonSearchView
+from apps.personas.views import PersonaSearchView
 
 # Patrones de URL principales del proyecto
 urlpatterns = [
@@ -47,7 +47,7 @@ urlpatterns = [
     path("api/payments/", include("apps.payments.urls")),  # Gestión de pagos
     path("api/files/", include("apps.files.urls")),  # Subida y gestión de archivos
     path("api/courses/", include("apps.courses.urls")),  # Gestión de cursos
-    path("api/persons/search/", PersonSearchView.as_view(), name="persons-search"),
+    path("api/persons/search/", PersonaSearchView.as_view(), name="persons-search"),
     path("api/personas/", include("apps.personas.urls")),  # Endpoints CRUD de personas
     # Endpoints de salud del sistema (para monitoreo)
     path("healthz/", include("utils.health.urls")),

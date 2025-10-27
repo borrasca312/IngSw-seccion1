@@ -59,3 +59,33 @@ cd ..\SystemScoutsClient
 npm ci || npm install
 npm run dev
 ```
+
+## Personas: búsqueda avanzada (API)
+
+Endpoint: `GET /api/persons/search/`
+
+Query params soportados:
+- `rut`: string, acepta formato chileno (`12.345.678-9`) o sin puntos/guion; también parcial
+- `nombre`: string, busca por `icontains` en el nombre
+- `grupo`: string, código exacto del grupo o parte del nombre del grupo
+- `rama`: string, código exacto (ej. `MANADA`, `TROPA`) o parte del nombre
+- `edad_min`: entero (años) — incluye personas con edad >= `edad_min`
+- `edad_max`: entero (años) — incluye personas con edad <= `edad_max`
+- `page`: entero (paginación)
+- `page_size`: entero (por página, máx 100)
+
+Respuesta (paginada):
+```json
+{
+	"count": 2,
+	"next": "http://.../api/persons/search/?page=2",
+	"previous": null,
+	"results": [
+		{"id": 1, "rut": "12.345.678-9", "nombres": "Juan Perez", "email": "juan@example.com", "grupo": "G1", "rama": "TROPA", "fecha_nacimiento": "2005-01-01"}
+	]
+}
+```
+
+Índices y performance:
+- Se añadieron índices a `Persona.rut`, `Persona.nombres`, `Persona.fecha_nacimiento` y las FKs `grupo`/`rama` (implícitos) para acelerar filtros.
+- Filtro de edad se calcula contra `fecha_nacimiento` sin traer datos a memoria.
