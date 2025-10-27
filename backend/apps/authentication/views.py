@@ -14,13 +14,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from utils.rut_validator import clean_rut, format_rut, validate_rut
 
 from .models import Role, RoleAssignment, User
-from .serializers import (
-    CustomTokenObtainPairSerializer,
-    LoginSerializer,
-    RoleAssignmentSerializer,
-    RoleSerializer,
-    UserSerializer,
-)
+from .serializers import (CustomTokenObtainPairSerializer, LoginSerializer,
+                          RoleAssignmentSerializer, RoleSerializer,
+                          UserSerializer)
 
 
 class UserViewSet(viewsets.ModelViewSet):

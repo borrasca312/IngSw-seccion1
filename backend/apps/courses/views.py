@@ -10,12 +10,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Category, Course, CourseTeam
-from .serializers import (
-    CategorySerializer,
-    CourseDetailSerializer,
-    CourseListSerializer,
-    CourseTeamSerializer,
-)
+from .serializers import (CategorySerializer, CourseDetailSerializer,
+                          CourseListSerializer, CourseTeamSerializer)
 
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):

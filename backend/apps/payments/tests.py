@@ -5,22 +5,13 @@ from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.test import APIClient
 
-from .models import (
-    ComprobantePago,
-    ConceptoContable,
-    PagoCambioPersona,
-    PagoComprobante,
-    PagoPersona,
-    Prepago,
-)
+from .models import (ComprobantePago, ConceptoContable, PagoCambioPersona,
+                     PagoComprobante, PagoPersona, Prepago)
 from .serializers import ConceptoContableSerializer  # Added back
 from .serializers import PagoComprobanteSerializer  # Added back
-from .serializers import (
-    ComprobantePagoSerializer,
-    PagoCambioPersonaSerializer,
-    PagoPersonaSerializer,
-    PrepagoSerializer,
-)
+from .serializers import (ComprobantePagoSerializer,
+                          PagoCambioPersonaSerializer, PagoPersonaSerializer,
+                          PrepagoSerializer)
 
 User = get_user_model()
 

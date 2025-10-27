@@ -5,12 +5,8 @@ This module tests the Chilean RUT (Rol Único Tributario) validation functionali
 used throughout the SGICS platform for person identification.
 """
 
-from utils.rut_validator import (
-    calculate_verification_digit,
-    clean_rut,
-    format_rut,
-    validate_rut,
-)
+from utils.rut_validator import (calculate_verification_digit, clean_rut,
+                                 format_rut, validate_rut)
 
 
 class TestCleanRut:
