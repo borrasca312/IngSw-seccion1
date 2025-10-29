@@ -8,9 +8,8 @@ operaciones CRUD (Crear, Leer, Actualizar, Eliminar) para su modelo asociado.
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
-# Importamos la clase de permiso personalizada. Asumiendo que está en un módulo de permisos.
-# Para este ejemplo, la importamos desde la configuración de DRF.
-from scouts_platform.settings.rest_framework import IsTreasurerOrAdminOrReadOnly
+# Importamos la clase de permiso personalizada.
+from .permissions import IsTreasurerOrAdminOrReadOnly
 
 from .filters import ComprobantePagoFilter, PagoPersonaFilter
 from .models import (
