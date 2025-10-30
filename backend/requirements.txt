@@ -6,7 +6,7 @@ django-cors-headers==4.3.1
 django-filter==24.3
 
 # Database - Conectores de base de datos
-# PyMySQL==1.1.0         # MySQL connector alternativo (pure Python)
+pymysql==1.1.0         # MySQL connector alternativo (pure Python)
 # mssql-django==1.4    # SQL Server support (opcional, instalar solo si se requiere)
 
 # Development and Testing
