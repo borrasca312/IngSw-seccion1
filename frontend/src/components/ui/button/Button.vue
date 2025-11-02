@@ -1,17 +1,19 @@
 <template>
-  <button :class="cn(buttonVariants({ variant, size }), $attrs.class)" v-bind="$attrs">
+  <button :class="cn(buttonVariants({ variant, size }), props.class)" v-bind="$attrs">
     <slot />
   </button>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { buttonVariants, type ButtonVariants } from '.'
-import { cn } from '@/lib/utils'
+import { computed, useAttrs, defineOptions} from 'vue'
+import { buttonVariants, type ButtonVariants } from './index'
+import { cn } from '../../../utils'
+const $attrs = useAttrs()
+defineOptions({ inheritAttrs: false })
 
 interface Props extends ButtonVariants {
   class?: string
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 </script>

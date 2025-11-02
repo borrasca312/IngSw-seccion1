@@ -32,6 +32,15 @@
   --color-text: var(--vt-c-text-light-1);
 
   --section-gap: 160px;
+  /* --- Paleta de Colores GICS --- */   /* AXEL GRUPO A */
+  --color-gics-azul-primario: #007bff;
+  --color-gics-azul-secundario: #0d6efd;
+  --color-gics-verde-exito: #198754;
+  --color-gics-gris-fondo: #f8f9fa;
+  --color-gics-gris-borde: #dee2e6;
+  --color-gics-texto-principal: #212529;
+  --color-gics-texto-secundario: #6c757d;
+  --color-gics-blanco: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {

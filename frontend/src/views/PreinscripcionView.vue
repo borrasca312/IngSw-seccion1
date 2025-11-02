@@ -14,13 +14,25 @@
         </div>
       </template>
       <template #step-2>
-        <div class="form-grid">
-          <InputBase label="RUT" v-model="form.rut" @blur="buscarPersona" />
-          <InputBase label="Nombre" v-model="form.nombre" required />
-          <InputBase label="Correo" v-model="form.email" type="email" required />
-          <InputBase label="Telรฉfono" v-model="form.telefono" required />
-        </div>
-      </template>
+        <div class="form-grid">
+                    <div class="form-group">
+            <Label for="rut">RUT</Label>
+            <Input id="rut" v-model="form.rut" @blur="buscarPersona" />
+          </div>
+                    <div class="form-group">
+            <Label for="nombre">Nombre</Label>
+            <Input id="nombre" v-model="form.nombre" required />
+          </div>
+                    <div class="form-group">
+            <Label for="email">Correo</Label>
+            <Input id="email" v-model="form.email" type="email" required />
+          </div>
+                    <div class="form-group">
+            <Label for="telefono">Teléfono</Label>
+            <Input id="telefono" v-model="form.telefono" required />
+          </div>
+        </div>
+      </template>
       <template #step-3>
         <div class="validation-step">
           <h2>Validaciones</h2>
@@ -40,7 +52,7 @@
           <p><strong>RUT:</strong> {{ form.rut }}</p>
           <p><strong>Email:</strong> {{ form.email }}</p>
           <p><strong>Teléfono:</strong> {{ form.telefono }}</p>
-          <BaseButton @click="submitPreinscripcion">Enviar Preinscripción</BaseButton>
+          <Button variant="primary" @click="submitPreinscripcion">Enviar Preinscripción</Button>
         </div>
       </template>
     </Stepper>
@@ -52,8 +64,10 @@ import { ref, reactive, onMounted, computed } from 'vue';
 import { useCursosStore } from '@/stores/cursos';
 import type { Curso } from '@/types';
 import Stepper from '@/components/shared/Stepper.vue';
-import InputBase from '@/components/shared/InputBase.vue';
 import { usePersonasStore } from '@/stores/personas';
+import Button from '@/components/ui/button/Button.vue';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const cursosStore = useCursosStore();
 const personasStore = usePersonasStore();
