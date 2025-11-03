@@ -81,7 +81,7 @@ Endpoints importantes
 Problemas comunes y soluciones rápidas
 ------------------------------------
 - El frontend no puede solicitar al backend → asegúrate de que el backend corre en :8000 y que CORS está habilitado.
-- Token no guardado / no redirige tras login → localStorage usa la clave `access_token`. Si ves que no se guarda, revisa `frontend/src/stores/auth.ts`.
+- Token no guardado / no redirige tras login → localStorage usa la clave `authToken`. Si ves que no se guarda, revisa `frontend/src/stores/auth.ts`.
 - `No match found for location with path "/reset-request"` → es una advertencia del router cuando una ruta no existe; revisa `frontend/src/router/index.ts`.
 - Si ves errores de TypeScript por `@/lib/utils` faltante, crea `frontend/src/lib/utils.ts` con un helper `cn()` (ya incluido en el repo reciente).
 
@@ -95,6 +95,12 @@ Contacto
 Para dudas técnicas, abre un issue en el repositorio o revisa `docs/README.md`.
 
 ----
+
+## Para usuarios finales
+
+Si vas a usar la aplicación (y no desarrollar):
+- Lee el Manual de Usuario: docs/ManualUsuario.md
+- Para validar flujos clave, revisa también Pruebas de Aceptación de Usuario: docs/UAT.md
 
 ## Actualización de Django — Nov 2025
 
