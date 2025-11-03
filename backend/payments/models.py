@@ -15,9 +15,7 @@ class PagoPersona(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.RESTRICT, db_column="usu_id")
     fecha_hora = models.DateTimeField(db_column="pap_fecha_hora")
     tipo = models.IntegerField(db_column="pap_tipo")
-    valor = models.DecimalField(
-        db_column="pap_valor", max_digits=21, decimal_places=6
-    )
+    valor = models.DecimalField(db_column="pap_valor", max_digits=21, decimal_places=6)
     estado = models.IntegerField(db_column="pap_estado")
     observacion = models.CharField(
         db_column="pap_observacion", max_length=100, blank=True, null=True
@@ -55,9 +53,7 @@ class Prepago(models.Model):
         blank=True,
         null=True,
     )
-    valor = models.DecimalField(
-        db_column="ppa_valor", max_digits=21, decimal_places=6
-    )
+    valor = models.DecimalField(db_column="ppa_valor", max_digits=21, decimal_places=6)
     observacion = models.TextField(db_column="ppa_observacion", blank=True, null=True)
     vigente = models.BooleanField(db_column="ppa_vigente")
 
@@ -79,9 +75,7 @@ class ComprobantePago(models.Model):
     fecha_hora = models.DateTimeField(db_column="cpa_fecha_hora")
     fecha = models.DateField(db_column="cpa_fecha")
     numero = models.IntegerField(db_column="cpa_numero")
-    valor = models.DecimalField(
-        db_column="cpa_valor", max_digits=21, decimal_places=6
-    )
+    valor = models.DecimalField(db_column="cpa_valor", max_digits=21, decimal_places=6)
 
     class Meta:
         db_table = "comprobante_pago"
