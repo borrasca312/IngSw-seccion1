@@ -5,6 +5,7 @@
     </div>
     <nav class="main-nav" aria-label="Navegación principal">
       <RouterLink to="/"><Icon name="dashboard" /> Dashboard</RouterLink>
+      <RouterLink to="/dashboard-ejecutivo"><Icon name="chart" /> Dashboard Ejecutivo</RouterLink>
       <RouterLink to="/cursos"><Icon name="training" /> Cursos</RouterLink>
       <RouterLink to="/preinscripcion"><Icon name="people" /> Preinscripción</RouterLink>
       <RouterLink to="/pagos"><Icon name="payment" /> Pagos</RouterLink>
@@ -27,7 +28,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
-import Icon from './Icon.vue'; // Asumimos un componente para iconos
+import Icon from './Icon.vue'; 
 
 const authStore = useAuthStore();
 </script>

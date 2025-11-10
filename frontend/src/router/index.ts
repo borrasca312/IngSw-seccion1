@@ -17,6 +17,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/dashboard-ejecutivo',
+      name: 'dashboard-ejecutivo',
+      component: () => import('../views/DashboardExecutivoView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/personas',
       name: 'personas',
       component: () => import('../views/PersonasView.vue'),
