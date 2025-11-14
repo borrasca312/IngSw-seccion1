@@ -1,0 +1,125 @@
+
+import { useState } from 'react';
+import { Helmet } from 'react-helmet';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Award, Lock, Mail } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
+
+const CoordinatorLogin = () => {
+  const navigate = useNavigate();
+  const toast = useToast();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    
+    if (email === 'coordinador@scout.cl' && password === 'scout2024') {
+      const coordinator = {
+        email,
+        name: 'Coordinador Scout',
+        loginTime: new Date().toISOString()
+      };
+      localStorage.setItem('coordinator', JSON.stringify(coordinator));
+      
+      toast({
+        title: "¡Bienvenido!",
+        description: "Inicio de sesión exitoso.",
+      });
+
+      setTimeout(() => {
+        navigate('/coordinador/dashboard/ejecutivo');
+      }, 1000);
+    } else {
+      toast({
+        title: "Error de inicio de sesión",
+        description: "Credenciales inválidas. Por favor, inténtalo de nuevo.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  return (
+    <>
+      <Helmet>
+        <title>Login Coordinador - Scout Formación</title>
+        <meta name="description" content="Acceso para coordinadores de la plataforma Scout." />
+      </Helmet>
+
+      <div className="min-h-screen bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="w-full max-w-md"
+        >
+          <div className="bg-white rounded-lg shadow-2xl overflow-hidden">
+            <div className="bg-green-700 text-white p-8 text-center">
+              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4">
+                <Award className="w-10 h-10 text-green-700" />
+              </div>
+              <h1 className="text-3xl font-bold">Portal Coordinador</h1>
+              <p className="text-green-100 mt-2">Scout Formación</p>
+            </div>
+
+            <form onSubmit={handleLogin} className="p-8 space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-gray-700">Correo Electrónico</Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="coordinador@scout.cl"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="pl-10 border-gray-300 focus:border-green-600 focus:ring-green-600"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-gray-700">Contraseña</Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="pl-10 border-gray-300 focus:border-green-600 focus:ring-green-600"
+                  />
+                </div>
+              </div>
+
+              <Button 
+                type="submit"
+                className="w-full bg-green-600 hover:bg-green-700 text-white py-6 text-lg font-semibold transition-all duration-300 transform hover:scale-105"
+              >
+                Iniciar Sesión
+              </Button>
+
+              <div className="text-center">
+                <Button
+                  type="button"
+                  variant="link"
+                  onClick={() => navigate('/')}
+                  className="text-green-600 hover:text-green-700"
+                >
+                  Volver al Inicio
+                </Button>
+              </div>
+            </form>
+          </div>
+        </motion.div>
+      </div>
+    </>
+  );
+};
+
+export default CoordinatorLogin;

@@ -2,17 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Componentes personalizados con Tailwind */
-@layer components {
-  .btn-scout-primary {
-    @apply bg-scout-azul-medio hover:bg-scout-azul-oscuro text-white font-medium px-6 py-3 rounded-lg transition-all duration-200;
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 142 76% 36%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 142 76% 36%;
+    --radius: 0.5rem;
   }
-  
-  .btn-scout-secondary {
-    @apply bg-white hover:bg-scout-azul-muy-claro text-scout-azul-medio border border-scout-azul-medio font-medium px-6 py-3 rounded-lg transition-all duration-200;
+}
+
+@layer base {
+  * {
+    @apply border-border;
   }
-  
-  .card-scout {
-    @apply bg-white rounded-lg p-6 border border-gray-200;
+  body {
+    @apply bg-background text-foreground;
   }
 }
