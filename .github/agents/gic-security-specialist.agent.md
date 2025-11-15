@@ -1,7 +1,7 @@
 ---
 name: GIC-security-specialist
 description: Especialista en seguridad para GIC - Autenticación JWT, protección XSS/CSRF, auditoría y compliance para datos 
-target: vscode
+target: github-copilot
 tools: ["edit", "search"]
 ---
 

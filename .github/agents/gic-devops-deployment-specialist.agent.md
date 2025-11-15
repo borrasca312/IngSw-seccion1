@@ -1,7 +1,7 @@
 ---
 name: GIC-devops-deployment-specialist
 description: Especialista en DevOps y deployment para GIC - CI/CD, containerización, monitoreo, y infraestructura  escalable
-target: vscode
+target: github-copilot
 tools: ['edit', 'search']
 ---
 

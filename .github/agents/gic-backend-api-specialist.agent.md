@@ -1,7 +1,7 @@
 ---
 name: GIC-backend-api-specialist
 description: Especialista en desarrollo backend para GIC - Django 5, DRF, MySQL, y arquitectura API robusta para gestión 
-target: vscode
+target: github-copilot
 tools: ["edit", "search"]
 ---
 
