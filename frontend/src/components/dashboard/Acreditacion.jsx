@@ -46,7 +46,7 @@ const Acreditacion = () => {
       {/* ---------------------- Card: Generación QR ---------------------- */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2 mb-3">
-          <QrCode className="w-6 h-6 text-green-600" />
+          <QrCode className="w-6 h-6 text-blue-600" />
           Generación de Códigos QR
         </h2>
 
@@ -56,7 +56,7 @@ const Acreditacion = () => {
 
         <Button
           onClick={generarQR}
-          className="bg-green-600 hover:bg-green-700 text-white"
+          className="bg-blue-600 hover:bg-blue-900 text-white"
         >
           Generar QR
         </Button>
@@ -67,7 +67,7 @@ const Acreditacion = () => {
             <p className="text-sm text-gray-700 font-semibold">QR Generado:</p>
 
             <div className="mt-2 flex items-center gap-2">
-              <code className="text-sm bg-white px-2 py-1 rounded border">
+              <code className="text-black bg-white px-2 py-1 rounded border">
                 {generatedQR}
               </code>
 
