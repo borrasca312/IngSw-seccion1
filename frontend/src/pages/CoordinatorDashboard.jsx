@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { 
   LogOut, Menu, LayoutDashboard, BookOpen, ClipboardCheck, CreditCard, Users, Mail, Award, Database, Truck
 } from 'lucide-react';
-// import { useToast } from '@/components/ui/use-toast';
+import authService from '@/services/authService';
 import Cursos from '@/components/dashboard/Cursos';
 import Pagos from '@/components/dashboard/Pagos';
 import EnvioCorreo from '@/components/dashboard/EnvioCorreo';
@@ -23,7 +23,6 @@ import ProveedoresPage from '@/pages/ProveedoresPage';
 const CoordinatorDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  // const { toast } = useToast();
   const [coordinator, setCoordinator] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 1024);
   
@@ -61,11 +60,7 @@ const CoordinatorDashboard = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('coordinator');
-    // toast({
-    //   title: "Sesión Cerrada",
-    //   description: "Has cerrado sesión exitosamente.",
-    // });
+    authService.logout('USER_ACTION');
     console.log('Sesión cerrada');
     navigate('/');
   };
