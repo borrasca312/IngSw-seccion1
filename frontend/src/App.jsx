@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from '@/pages/HomePage';
 import PreRegistrationForm from '@/pages/PreRegistrationForm';
@@ -16,10 +16,10 @@ import RegionList from '@/components/geografia/RegionList';
 
 function App() {
   return (
-    <Router 
+    <Router
       future={{
         v7_startTransition: true,
-        v7_relativeSplatPath: true
+        v7_relativeSplatPath: true,
       }}
     >
       <div className="min-h-screen">
@@ -52,3 +52,4 @@ function App() {
 }
 
 export default App;
+
