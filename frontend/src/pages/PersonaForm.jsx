@@ -24,6 +24,13 @@ const PersonaForm = () => {
   const { id } = useParams();
   const isEdit = Boolean(id);
 
+  // Si no hay ID, redirigir a preinscripción ya que la creación debe hacerse allí
+  useEffect(() => {
+    if (!id) {
+      navigate('/preinscripcion');
+    }
+  }, [id, navigate]);
+
   const [formData, setFormData] = useState({
     // Datos básicos
     rut: '',
@@ -40,6 +47,7 @@ const PersonaForm = () => {
     // Información adicional
     profesion: '',
     religion: '',
+    numeroMMAA: '',
     apodo: '',
     
     // Datos médicos y emergencia
@@ -50,7 +58,6 @@ const PersonaForm = () => {
     otros: '',
     
     // Experiencia Scout
-    numeroMMAA: '',
     tiempoNNAJ: '',
     tiempoAdulto: '',
     
@@ -185,8 +192,8 @@ const PersonaForm = () => {
   return (
     <>
       <Helmet>
-        <title>{isEdit ? 'Editar Persona' : 'Nueva Persona'} - Scout Formación</title>
-        <meta name="description" content={`${isEdit ? 'Editar' : 'Crear'} persona en el sistema Scout.`} />
+        <title>Editar Persona - Scout Formación</title>
+        <meta name="description" content="Editar información de persona registrada en el sistema Scout." />
       </Helmet>
 
       <div className="min-h-screen bg-gray-50">
@@ -205,9 +212,7 @@ const PersonaForm = () => {
                 </Button>
                 <div className="flex items-center space-x-3">
                   <User className="w-8 h-8" />
-                  <h1 className="text-2xl font-bold">
-                    {isEdit ? 'Editar Persona' : 'Nueva Persona'}
-                  </h1>
+                  <h1 className="text-2xl font-bold">Editar Persona</h1>
                 </div>
               </div>
             </div>
@@ -680,7 +685,7 @@ const PersonaForm = () => {
                 ) : (
                   <>
                     <Save className="w-4 h-4 mr-2" />
-                    {isEdit ? 'Actualizar' : 'Crear'} Persona
+                    Actualizar Persona
                   </>
                 )}
               </Button>

@@ -55,5 +55,3 @@ const Maestros = () => {
 };
 
 export default Maestros;
-
-export default Maestros;

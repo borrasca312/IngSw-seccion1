@@ -74,6 +74,26 @@ const Step4AdditionalData = ({ formData, updateFormData }) => {
         </div>
 
         <div className="space-y-2">
+          <Label htmlFor="religion">Religión</Label>
+          <Input
+            id="religion"
+            value={formData.religion}
+            onChange={(e) => handleChange('religion', e.target.value)}
+            placeholder="Tu religión (opcional)"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="numeroMMAA">Número MMAA</Label>
+          <Input
+            id="numeroMMAA"
+            value={formData.numeroMMAA}
+            onChange={(e) => handleChange('numeroMMAA', e.target.value)}
+            placeholder="Número de identificación MMAA"
+          />
+        </div>
+
+        <div className="space-y-2">
           <Label htmlFor="workingWithYouth">¿Trabajas con Jóvenes? *</Label>
           <select
             id="workingWithYouth"
@@ -89,15 +109,25 @@ const Step4AdditionalData = ({ formData, updateFormData }) => {
 
         {formData.workingWithYouth === 'si' && (
           <div className="space-y-2">
-            <Label htmlFor="youthWorkTime">Tiempo trabajado con jóvenes</Label>
+            <Label htmlFor="youthWorkTime">Tiempo trabajo con NNAJ</Label>
             <Input
               id="youthWorkTime"
               value={formData.youthWorkTime}
               onChange={(e) => handleChange('youthWorkTime', e.target.value)}
-              placeholder="Ejemplo: 5 años, 2 meses, etc."
+              placeholder="ej. 5 años"
             />
           </div>
         )}
+
+        <div className="space-y-2">
+          <Label htmlFor="adultWorkTime">Tiempo trabajo con Adultos</Label>
+          <Input
+            id="adultWorkTime"
+            value={formData.adultWorkTime}
+            onChange={(e) => handleChange('adultWorkTime', e.target.value)}
+            placeholder="ej. 3 años"
+          />
+        </div>
 
         <div className="space-y-2">
           <Label htmlFor="nickname">Apodo Scout</Label>

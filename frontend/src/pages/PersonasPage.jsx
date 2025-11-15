@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
+import { initializeSampleData } from '@/data/samplePersonas';
 import { 
   Plus, 
   Search, 
@@ -15,7 +16,9 @@ import {
   MapPin,
   Calendar,
   Award,
-  ChevronLeft
+  ChevronLeft,
+  Eye,
+  Clock
 } from 'lucide-react';
 
 const PersonasPage = () => {
@@ -24,10 +27,12 @@ const PersonasPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredPersonas, setFilteredPersonas] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedPersona, setSelectedPersona] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   // Cargar personas desde localStorage (simulación)
   useEffect(() => {
-    const storedPersonas = JSON.parse(localStorage.getItem('personas') || '[]');
+    const storedPersonas = initializeSampleData();
     setPersonas(storedPersonas);
     setFilteredPersonas(storedPersonas);
   }, []);
@@ -45,7 +50,12 @@ const PersonasPage = () => {
   }, [searchTerm, personas]);
 
   const handleEditPersona = (id) => {
-    navigate(`/personas/edit/${id}`);
+    navigate(`/personas/editar/${id}`);
+  };
+
+  const handleViewPersona = (persona) => {
+    setSelectedPersona(persona);
+    setShowModal(true);
   };
 
   const handleDeletePersona = (id) => {
@@ -60,7 +70,7 @@ const PersonasPage = () => {
     <>
       <Helmet>
         <title>Gestión de Personas - Scout Formación</title>
-        <meta name="description" content="Administración de personas registradas en el sistema Scout." />
+        <meta name="description" content="Gestión CRUD de personas registradas - Ver, modificar y eliminar registros." />
       </Helmet>
 
       <div className="min-h-screen bg-gray-50">
@@ -77,18 +87,16 @@ const PersonasPage = () => {
                   <ChevronLeft className="w-5 h-5 mr-2" />
                   Volver
                 </Button>
-                <div className="flex items-center space-x-3">
-                  <User className="w-8 h-8" />
-                  <h1 className="text-2xl font-bold">Gestión de Personas</h1>
+                <div>
+                  <div className="flex items-center space-x-3">
+                    <User className="w-8 h-8" />
+                    <h1 className="text-2xl font-bold">Gestión de Personas</h1>
+                  </div>
+                  <p className="text-white/80 text-sm mt-1">
+                    Ver, modificar y eliminar personas registradas
+                  </p>
                 </div>
               </div>
-              <Button 
-                onClick={() => navigate('/personas/create')}
-                className="bg-white text-scout-azul-oscuro hover:bg-scout-azul-muy-claro"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                Nueva Persona
-              </Button>
             </div>
           </div>
         </div>
@@ -218,13 +226,13 @@ const PersonasPage = () => {
               <div className="p-12 text-center">
                 <User className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No hay personas registradas</h3>
-                <p className="text-gray-500 mb-4">Comienza agregando la primera persona al sistema.</p>
+                <p className="text-gray-500 mb-4">Las personas se registran a través del proceso de preinscripción.</p>
                 <Button 
-                  onClick={() => navigate('/personas/create')}
+                  onClick={() => navigate('/preinscripcion')}
                   className="bg-scout-azul-medio hover:bg-scout-azul-oscuro"
                 >
                   <Plus className="w-5 h-5 mr-2" />
-                  Agregar Primera Persona
+                  Ir a Preinscripción
                 </Button>
               </div>
             ) : (
@@ -239,7 +247,10 @@ const PersonasPage = () => {
                         Contacto
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Información
+                        Profesión/Religión
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Experiencia Scout
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Estado
@@ -287,9 +298,19 @@ const PersonasPage = () => {
                           <div className="text-sm text-gray-900">
                             {persona.profesion || 'No especificada'}
                           </div>
-                          <div className="text-sm text-gray-500 flex items-center">
-                            <MapPin className="w-4 h-4 mr-2 text-gray-400" />
-                            {persona.comuna || 'No especificada'}
+                          <div className="text-sm text-gray-500">
+                            {persona.religion || 'No especificada'}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            MMAA: {persona.numeroMMAA || 'N/A'}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            NNAJ: {persona.tiempoNNAJ || 'N/A'}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            Adultos: {persona.tiempoAdulto || 'N/A'}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -311,8 +332,18 @@ const PersonasPage = () => {
                             <Button
                               variant="ghost"
                               size="sm"
+                              onClick={() => handleViewPersona(persona)}
+                              className="text-blue-600 hover:text-blue-800"
+                              title="Ver detalles"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
                               onClick={() => handleEditPersona(persona.id)}
                               className="text-scout-azul-medio hover:text-scout-azul-oscuro"
+                              title="Editar"
                             >
                               <Edit className="w-4 h-4" />
                             </Button>
@@ -321,6 +352,7 @@ const PersonasPage = () => {
                               size="sm"
                               onClick={() => handleDeletePersona(persona.id)}
                               className="text-red-600 hover:text-red-800"
+                              title="Eliminar"
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
@@ -335,6 +367,205 @@ const PersonasPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal de Detalles */}
+      {showModal && selectedPersona && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+          >
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-scout-azul-oscuro">
+                  Detalles de {selectedPersona.nombres} {selectedPersona.apellidoPaterno}
+                </h2>
+                <Button
+                  variant="ghost"
+                  onClick={() => setShowModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  ✕
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              {/* Información Personal */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <User className="w-5 h-5 mr-2" />
+                  Información Personal
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Nombre Completo</p>
+                    <p className="text-sm text-gray-900">{selectedPersona.nombres} {selectedPersona.apellidoPaterno} {selectedPersona.apellidoMaterno}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">RUT</p>
+                    <p className="text-sm text-gray-900">{selectedPersona.rut}-{selectedPersona.dv}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Fecha de Nacimiento</p>
+                    <p className="text-sm text-gray-900">{selectedPersona.fechaNacimiento || 'No especificada'}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Apodo Scout</p>
+                    <p className="text-sm text-gray-900">{selectedPersona.apodo || 'No especificado'}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Información de Contacto */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Phone className="w-5 h-5 mr-2" />
+                  Información de Contacto
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Email</p>
+                    <p className="text-sm text-gray-900">{selectedPersona.email}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Teléfono</p>
+                    <p className="text-sm text-gray-900">{selectedPersona.telefono}</p>
+                  </div>
+                  <div className="md:col-span-2">
+                    <p className="text-sm font-medium text-gray-600">Dirección</p>
+                    <p className="text-sm text-gray-900">{selectedPersona.direccion || 'No especificada'}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Información Profesional y Religiosa */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Award className="w-5 h-5 mr-2" />
+                  Información Adicional
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Profesión</p>
+                    <p className="text-sm text-gray-900">{selectedPersona.profesion || 'No especificada'}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Religión</p>
+                    <p className="text-sm text-gray-900">{selectedPersona.religion || 'No especificada'}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Número MMAA</p>
+                    <p className="text-sm text-gray-900">{selectedPersona.numeroMMAA || 'No asignado'}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Experiencia Scout */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Clock className="w-5 h-5 mr-2" />
+                  Experiencia Scout
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Tiempo trabajo con NNAJ</p>
+                    <p className="text-sm text-gray-900">{selectedPersona.tiempoNNAJ || 'No especificado'}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Tiempo trabajo con Adultos</p>
+                    <p className="text-sm text-gray-900">{selectedPersona.tiempoAdulto || 'No especificado'}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Información Médica y Emergencia */}
+              {(selectedPersona.alergiasEnfermedades || selectedPersona.nombreEmergencia) && (
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <Calendar className="w-5 h-5 mr-2" />
+                    Información Médica y Emergencia
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {selectedPersona.alergiasEnfermedades && (
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">Alergias y Enfermedades</p>
+                        <p className="text-sm text-gray-900">{selectedPersona.alergiasEnfermedades}</p>
+                      </div>
+                    )}
+                    {selectedPersona.nombreEmergencia && (
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">Contacto de Emergencia</p>
+                        <p className="text-sm text-gray-900">{selectedPersona.nombreEmergencia}</p>
+                        {selectedPersona.telefonoEmergencia && (
+                          <p className="text-sm text-gray-500">{selectedPersona.telefonoEmergencia}</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Estado del Formador */}
+              {selectedPersona.esFormador && (
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <Award className="w-5 h-5 mr-2" />
+                    Estado como Formador
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Habilitación 1</p>
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        selectedPersona.habilitacion1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      }`}>
+                        {selectedPersona.habilitacion1 ? 'Completada' : 'Pendiente'}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Habilitación 2</p>
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        selectedPersona.habilitacion2 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      }`}>
+                        {selectedPersona.habilitacion2 ? 'Completada' : 'Pendiente'}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Verificación</p>
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        selectedPersona.verificacion ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {selectedPersona.verificacion ? 'Verificado' : 'Sin verificar'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="p-6 border-t border-gray-200 flex justify-end space-x-4">
+              <Button
+                variant="outline"
+                onClick={() => setShowModal(false)}
+                className="border-gray-300 text-gray-700 hover:bg-gray-50"
+              >
+                Cerrar
+              </Button>
+              <Button
+                onClick={() => {
+                  setShowModal(false);
+                  handleEditPersona(selectedPersona.id);
+                }}
+                className="bg-scout-azul-medio hover:bg-scout-azul-oscuro"
+              >
+                <Edit className="w-4 h-4 mr-2" />
+                Editar Persona
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </>
   );
 };

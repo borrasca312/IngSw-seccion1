@@ -51,8 +51,11 @@ const PreRegistrationForm = () => {
     vehicleModel: '',
     vehiclePlate: '',
     profession: '',
+    religion: '',
+    numeroMMAA: '',
     workingWithYouth: '',
     youthWorkTime: '',
+    adultWorkTime: '',
     nickname: '',
     needsAccommodation: '',
     courseExpectations: '',
@@ -104,7 +107,7 @@ const PreRegistrationForm = () => {
       return;
     }
 
-    // Store in localStorage
+    // Store in preregistrations
     const existingRegistrations = JSON.parse(localStorage.getItem('preregistrations') || '[]');
     const newRegistration = {
       id: Date.now(),
@@ -113,6 +116,51 @@ const PreRegistrationForm = () => {
     };
     existingRegistrations.push(newRegistration);
     localStorage.setItem('preregistrations', JSON.stringify(existingRegistrations));
+
+    // Also create persona record for management
+    const personas = JSON.parse(localStorage.getItem('personas') || '[]');
+    const [nombres, ...apellidos] = (formData.fullName || '').split(' ');
+    const apellidoPaterno = apellidos[0] || '';
+    const apellidoMaterno = apellidos.slice(1).join(' ') || '';
+    const [rut, dv] = (formData.rut || '').split('-');
+
+    const newPersona = {
+      id: Date.now(),
+      rut: rut || '',
+      dv: dv || '',
+      nombres: nombres || '',
+      apellidoPaterno,
+      apellidoMaterno,
+      email: formData.email || '',
+      fechaNacimiento: formData.birthDate || '',
+      direccion: formData.address || '',
+      tipoTelefono: formData.phoneType === 'celular' ? 2 : 1,
+      telefono: formData.phone || '',
+      profesion: formData.profession || '',
+      religion: formData.religion || '',
+      numeroMMAA: formData.numeroMMAA || '',
+      apodo: formData.nickname || '',
+      alergiasEnfermedades: formData.allergies || '',
+      limitaciones: formData.limitations || '',
+      nombreEmergencia: formData.emergencyContact || '',
+      telefonoEmergencia: formData.emergencyPhone || '',
+      otros: formData.observations || '',
+      tiempoNNAJ: formData.youthWorkTime || '',
+      tiempoAdulto: formData.adultWorkTime || '',
+      estadoCivilId: '',
+      comunaId: formData.commune || '',
+      usuarioId: '',
+      vigente: true,
+      esFormador: false,
+      habilitacion1: false,
+      habilitacion2: false,
+      verificacion: false,
+      historialCapacitaciones: '',
+      fechaCreacion: new Date().toISOString()
+    };
+    
+    personas.push(newPersona);
+    localStorage.setItem('personas', JSON.stringify(personas));
 
     // toast({
     //   title: "¡Preinscripción Exitosa!",

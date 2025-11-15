@@ -26,7 +26,6 @@ function App() {
           <Route path="/dashboard/*" element={<CoordinatorDashboard />} />
           {/* Rutas de personas */}
           <Route path="/personas" element={<PersonasPage />} />
-          <Route path="/personas/nuevo" element={<PersonaForm />} />
           <Route path="/personas/editar/:id" element={<PersonaForm />} />
           {/* Rutas de maestros */}
           <Route path="/maestros" element={<MaestrosPage />} />

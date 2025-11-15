@@ -29,12 +29,36 @@ const Step6Review = ({ formData, updateFormData }) => {
             <p className="font-semibold text-gray-800">{formData.phone || 'No especificado'}</p>
           </div>
           <div>
+            <p className="text-sm text-gray-600">Profesión</p>
+            <p className="font-semibold text-gray-800">{formData.profession || 'No especificada'}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Religión</p>
+            <p className="font-semibold text-gray-800">{formData.religion || 'No especificada'}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Número MMAA</p>
+            <p className="font-semibold text-gray-800">{formData.numeroMMAA || 'No asignado'}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Apodo Scout</p>
+            <p className="font-semibold text-gray-800">{formData.nickname || 'No especificado'}</p>
+          </div>
+          <div>
             <p className="text-sm text-gray-600">Grupo Scout</p>
             <p className="font-semibold text-gray-800">{formData.group || 'No especificado'}</p>
           </div>
           <div>
             <p className="text-sm text-gray-600">Rama</p>
             <p className="font-semibold text-gray-800">{formData.branch || 'No especificado'}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Tiempo trabajo con NNAJ</p>
+            <p className="font-semibold text-gray-800">{formData.youthWorkTime || 'No especificado'}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Tiempo trabajo con Adultos</p>
+            <p className="font-semibold text-gray-800">{formData.adultWorkTime || 'No especificado'}</p>
           </div>
         </div>
       </div>
