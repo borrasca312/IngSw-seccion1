@@ -1,5 +1,5 @@
 ---
-name: GIC-testing-quality-specialist
+name: gic-testing-quality-specialist
 description: Especialista en testing y calidad para GIC - Jest, PyTest, cobertura de código, y estándares de calidad 
 target: github-copilot
 tools: ["edit", "search", "bash", "str_replace_editor", "create_file", "list_dir"]

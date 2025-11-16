@@ -1,5 +1,5 @@
 ---
-name: GIC-devops-deployment-specialist
+name: gic-devops-deployment-specialist
 description: Especialista en DevOps y deployment para GIC - CI/CD, containerización, monitoreo, y infraestructura  escalable
 target: github-copilot
 tools: ["edit", "search", "bash", "str_replace_editor", "create_file", "list_dir"]
