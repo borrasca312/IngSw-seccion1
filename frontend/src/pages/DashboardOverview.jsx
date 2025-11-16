@@ -13,11 +13,23 @@ const DashboardOverview = () => {
   return (
     <DashboardLayout>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card to="/dashboard/gestion-personas" title="Personas" desc="Administrar personas: crear, editar, eliminar." />
-        <Card to="/dashboard/gestion-pagos" title="Pagos" desc="Registrar y gestionar pagos y comprobantes." />
+        {/* Personas management is handled in a separate module/repo; card removed */}
+        <Card
+          to="/dashboard/gestion-pagos"
+          title="Pagos"
+          desc="Registrar y gestionar pagos y comprobantes."
+        />
         <Card to="/dashboard/gestion-cursos" title="Cursos" desc="Gestionar cursos y cuotas." />
-        <Card to="/dashboard/inscripciones" title="Inscripciones" desc="Ver y gestionar inscripciones." />
-        <Card to="/dashboard/preinscripcion" title="Preinscripción" desc="Revisar solicitudes de preinscripción." />
+        <Card
+          to="/dashboard/inscripciones"
+          title="Inscripciones"
+          desc="Ver y gestionar inscripciones."
+        />
+        <Card
+          to="/dashboard/preinscripcion"
+          title="Preinscripción"
+          desc="Revisar solicitudes de preinscripción."
+        />
       </div>
     </DashboardLayout>
   );

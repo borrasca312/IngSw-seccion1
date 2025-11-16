@@ -7,7 +7,7 @@ export const samplePersonas = [
     nombres: 'María José',
     apellidoPaterno: 'González',
     apellidoMaterno: 'López',
-    email: 'maria.gonzalez@email.com',
+    correo: 'maria.gonzalez@email.com',
     fechaNacimiento: '1985-03-15',
     direccion: 'Av. Providencia 1234, Providencia',
     tipoTelefono: 2,
@@ -32,7 +32,7 @@ export const samplePersonas = [
     habilitacion2: true,
     verificacion: true,
     historialCapacitaciones: 'Curso Básico 2020, Curso Avanzado 2022',
-    fechaCreacion: '2024-01-15T10:30:00.000Z'
+    fechaCreacion: '2024-01-15T10:30:00.000Z',
   },
   {
     id: 2,
@@ -41,7 +41,7 @@ export const samplePersonas = [
     nombres: 'Carlos',
     apellidoPaterno: 'Martínez',
     apellidoMaterno: 'Silva',
-    email: 'carlos.martinez@email.com',
+    correo: 'carlos.martinez@email.com',
     fechaNacimiento: '1990-07-22',
     direccion: 'Las Condes 567, Las Condes',
     tipoTelefono: 3,
@@ -66,7 +66,7 @@ export const samplePersonas = [
     habilitacion2: false,
     verificacion: false,
     historialCapacitaciones: '',
-    fechaCreacion: '2024-02-10T14:15:00.000Z'
+    fechaCreacion: '2024-02-10T14:15:00.000Z',
   },
   {
     id: 3,
@@ -75,7 +75,7 @@ export const samplePersonas = [
     nombres: 'Ana Sofía',
     apellidoPaterno: 'Rodríguez',
     apellidoMaterno: 'Pérez',
-    email: 'ana.rodriguez@email.com',
+    correo: 'ana.rodriguez@email.com',
     fechaNacimiento: '1988-12-05',
     direccion: 'Ñuñoa 890, Ñuñoa',
     tipoTelefono: 2,
@@ -100,7 +100,7 @@ export const samplePersonas = [
     habilitacion2: false,
     verificacion: true,
     historialCapacitaciones: 'Curso Básico 2018, Seminario Liderazgo 2023',
-    fechaCreacion: '2024-03-05T09:45:00.000Z'
+    fechaCreacion: '2024-03-05T09:45:00.000Z',
   },
   {
     id: 4,
@@ -109,7 +109,7 @@ export const samplePersonas = [
     nombres: 'Diego',
     apellidoPaterno: 'Morales',
     apellidoMaterno: 'Fuentes',
-    email: 'diego.morales@email.com',
+    correo: 'diego.morales@email.com',
     fechaNacimiento: '1995-04-18',
     direccion: 'Maipú 432, Maipú',
     tipoTelefono: 4,
@@ -134,7 +134,7 @@ export const samplePersonas = [
     habilitacion2: false,
     verificacion: false,
     historialCapacitaciones: '',
-    fechaCreacion: '2024-10-20T16:20:00.000Z'
+    fechaCreacion: '2024-10-20T16:20:00.000Z',
   },
   {
     id: 5,
@@ -143,7 +143,7 @@ export const samplePersonas = [
     nombres: 'Francisca',
     apellidoPaterno: 'Torres',
     apellidoMaterno: 'Vega',
-    email: 'francisca.torres@email.com',
+    correo: 'francisca.torres@email.com',
     fechaNacimiento: '1982-09-30',
     direccion: 'Santiago Centro 123, Santiago',
     tipoTelefono: 2,
@@ -167,9 +167,10 @@ export const samplePersonas = [
     habilitacion1: true,
     habilitacion2: true,
     verificacion: true,
-    historialCapacitaciones: 'Curso Básico 2015, Curso Avanzado 2017, Especialización Primeros Auxilios 2020',
-    fechaCreacion: '2023-12-01T11:10:00.000Z'
-  }
+    historialCapacitaciones:
+      'Curso Básico 2015, Curso Avanzado 2017, Especialización Primeros Auxilios 2020',
+    fechaCreacion: '2023-12-01T11:10:00.000Z',
+  },
 ];
 
 // Función para inicializar datos de prueba

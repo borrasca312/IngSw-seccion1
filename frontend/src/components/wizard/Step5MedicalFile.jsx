@@ -1,13 +1,17 @@
 import React from 'react';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/Label';
+import { Input } from '@/components/ui/Input';
 import { Upload } from 'lucide-react';
 
 const Step5MedicalFile = ({ formData, updateFormData }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+      const allowedTypes = [
+        'application/pdf',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      ];
       if (allowedTypes.includes(file.type)) {
         updateFormData({ medicalFile: file });
       } else {

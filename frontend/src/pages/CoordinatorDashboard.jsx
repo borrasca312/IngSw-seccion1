@@ -1,15 +1,23 @@
-
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { useNavigate, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
-import { 
-  LogOut, Menu, LayoutDashboard, BookOpen, ClipboardCheck, CreditCard, Users, Mail, Award, Database
-} from 'lucide-react';
-// import { useToast } from '@/components/ui/use-toast';
+import {
+  FaRightFromBracket,
+  FaBars,
+  FaChartLine,
+  FaBook,
+  FaClipboardCheck,
+  FaCreditCard,
+  FaUsers,
+  FaEnvelope,
+  FaAward,
+  FaDatabase,
+  FaTruck,
+} from 'react-icons/fa6';
+import authService from '@/services/authService';
 import Cursos from '@/components/dashboard/Cursos';
 import Pagos from '@/components/dashboard/Pagos';
-import Personas from '@/components/dashboard/Personas';
 import EnvioCorreo from '@/components/dashboard/EnvioCorreo';
 import Maestros from '@/components/dashboard/Maestros';
 import AcreditacionManual from '@/components/dashboard/AcreditacionManual';
@@ -18,25 +26,28 @@ import DashboardEjecutivo from '@/components/dashboard/DashboardEjecutivo';
 import Preinscripcion from '@/components/dashboard/Preinscripcion';
 import Acreditacion from '@/components/dashboard/Acreditacion';
 import UseCases from '@/pages/UseCases';
+import ProveedoresPage from '@/pages/ProveedoresPage';
 // import Breadcrumb from '@/components/Breadcrumb';
 
 const CoordinatorDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  // const { toast } = useToast();
   const [coordinator, setCoordinator] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 1024);
-  
-  console.log('✅ CoordinatorDashboard renderizado correctamente, location:', location.pathname);
+
+  // Move render-time console logging into an effect so it's only a side effect
+  useEffect(() => {
+    console.log('✅ CoordinatorDashboard renderizado correctamente, location:', location.pathname);
+  }, [location.pathname]);
 
   useEffect(() => {
     const storedCoordinator = localStorage.getItem('coordinator');
     if (!storedCoordinator) {
       // Para desarrollo, creamos un coordinador por defecto
       const defaultCoordinator = {
-        email: 'coordinador@scout.cl',
+        correo: 'coordinador@scout.cl',
         name: 'Coordinador Scout',
-        loginTime: new Date().toISOString()
+        loginTime: new Date().toISOString(),
       };
       localStorage.setItem('coordinator', JSON.stringify(defaultCoordinator));
       setCoordinator(defaultCoordinator);
@@ -58,28 +69,31 @@ const CoordinatorDashboard = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('coordinator');
-    // toast({
-    //   title: "Sesión Cerrada",
-    //   description: "Has cerrado sesión exitosamente.",
-    // });
+    authService.logout('USER_ACTION');
     console.log('Sesión cerrada');
     navigate('/');
   };
 
-  // Detectar si estamos en ruta /dashboard o /coordinador/dashboard
-  const basePath = location.pathname.startsWith('/coordinador/dashboard') ? '/coordinador/dashboard' : '/dashboard';
+  // Detectar si estamos en ruta /panel o /coordinador/panel, sino caer en /dashboard por compatibilidad
+  const basePath = location.pathname.startsWith('/coordinador/panel')
+    ? '/coordinador/panel'
+    : location.pathname.startsWith('/panel')
+      ? '/panel'
+      : location.pathname.startsWith('/coordinador/dashboard')
+        ? '/coordinador/dashboard'
+        : '/dashboard';
 
   const menuItems = [
-    { icon: LayoutDashboard, label: 'Dashboard Ejecutivo', path: `${basePath}/ejecutivo` },
-    { icon: BookOpen, label: 'Gestión de Cursos', path: `${basePath}/gestion-cursos` },
-    { icon: ClipboardCheck, label: 'Preinscripción', path: `${basePath}/preinscripcion` },
-    { icon: CreditCard, label: 'Gestión de Pagos', path: `${basePath}/gestion-pagos` },
-    { icon: Users, label: 'Gestión de Personas', path: `${basePath}/gestion-personas` },
-    { icon: Mail, label: 'Envío de Correos', path: `${basePath}/envio-correos` },
-    { icon: Award, label: 'Acreditación', path: `${basePath}/acreditacion` },
-    { icon: Database, label: 'Maestros', path: `${basePath}/maestros` },
-    { icon: LayoutDashboard, label: 'Casos de Uso', path: `${basePath}/use-cases` },
+    { icon: FaChartLine, label: 'Dashboard Ejecutivo', path: `${basePath}/ejecutivo` },
+    { icon: FaBook, label: 'Gestión de Cursos', path: `${basePath}/gestion-cursos` },
+    { icon: FaClipboardCheck, label: 'Preinscripción', path: `${basePath}/preinscripcion` },
+    { icon: FaCreditCard, label: 'Gestión de Pagos', path: `${basePath}/gestion-pagos` },
+    // Persona management moved/removed; link omitted
+    { icon: FaEnvelope, label: 'Envío de Correos', path: `${basePath}/envio-correos` },
+    { icon: FaAward, label: 'Acreditación', path: `${basePath}/acreditacion` },
+    { icon: FaDatabase, label: 'Maestros', path: `${basePath}/maestros` },
+    { icon: FaTruck, label: 'Proveedores', path: '/proveedores' },
+    { icon: FaChartLine, label: 'Casos de Uso', path: `${basePath}/use-cases` },
   ];
 
   if (!coordinator) {
@@ -88,7 +102,7 @@ const CoordinatorDashboard = () => {
 
   const getPageTitle = () => {
     const currentPath = location.pathname;
-    const activeItem = menuItems.find(item => item.path === currentPath);
+    const activeItem = menuItems.find((item) => item.path === currentPath);
     return activeItem ? activeItem.label : 'Dashboard';
   };
 
@@ -101,11 +115,13 @@ const CoordinatorDashboard = () => {
 
       <div className="min-h-screen bg-gray-50 flex">
         {/* Sidebar */}
-        <aside className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-primary text-primary-foreground shadow-lg transform transition-transform duration-300 ease-in-out ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}>
+        <aside
+          className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-primary text-primary-foreground shadow-lg transform transition-transform duration-300 ease-in-out ${
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
           <div className="flex items-center justify-center h-20 border-b border border-border">
-            <Award className="w-8 h-8 mr-2" />
+            <FaAward className="w-8 h-8 mr-2" />
             <span className="text-xl font-bold">Scout Admin</span>
           </div>
           <nav className="p-4 space-y-2 h-full overflow-y-auto">
@@ -142,13 +158,15 @@ const CoordinatorDashboard = () => {
                   onClick={() => setSidebarOpen(!sidebarOpen)}
                   className="text-gray-600 hover:bg-gray-100 lg:hidden"
                 >
-                  <Menu className="w-6 h-6" />
+                  <FaBars className="w-6 h-6" />
                 </Button>
                 {/* <Breadcrumb /> */}
                 <span className="text-lg font-semibold text-gray-700">Dashboard Scout</span>
               </div>
               <div className="flex items-center space-x-4">
-                <span className="text-sm hidden md:block">Bienvenido, <span className="font-semibold">{coordinator.name}</span></span>
+                <span className="text-sm hidden md:block">
+                  Bienvenido, <span className="font-semibold">{coordinator.name}</span>
+                </span>
                 <Button
                   onClick={() => navigate('/')}
                   variant="ghost"
@@ -161,7 +179,7 @@ const CoordinatorDashboard = () => {
                   variant="ghost"
                   className="text-gray-600 hover:bg-red-50 hover:text-red-600"
                 >
-                  <LogOut className="w-5 h-5 mr-0 sm:mr-2" />
+                  <FaRightFromBracket className="w-5 h-5 mr-0 sm:mr-2" />
                   <span className="hidden sm:inline">Cerrar Sesión</span>
                 </Button>
               </div>
@@ -176,16 +194,17 @@ const CoordinatorDashboard = () => {
               <Route path="/gestion-cursos" element={<Cursos />} />
               <Route path="/preinscripcion" element={<Preinscripcion />} />
               <Route path="/gestion-pagos" element={<Pagos />} />
-              <Route path="/gestion-personas" element={<Personas />} />
+              {/* Personas page removed from dashboard (managed in remote repository). */}
               <Route path="/envio-correos" element={<EnvioCorreo />} />
               <Route path="/acreditacion" element={<Acreditacion />} />
               <Route path="/maestros" element={<Maestros />} />
+              <Route path="/proveedores" element={<ProveedoresPage />} />
               {/* Fallback route */}
               <Route path="/" element={<Navigate to="ejecutivo" replace />} />
             </Routes>
           </main>
         </div>
-        
+
         {/* Overlay for mobile */}
         {sidebarOpen && window.innerWidth < 1024 && (
           <div
